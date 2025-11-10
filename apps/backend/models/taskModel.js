@@ -2,16 +2,12 @@ import mongoose, { Schema } from "mongoose";
 
 const taskSchema = new Schema(
   {
-    // --- The "Who" ---
     user: {
-      // This links the task back to its owner
       type: Schema.Types.ObjectId,
-      ref: "User", // Points to the 'User' model
+      ref: "User",
       required: true,
-      index: true, // Good for finding all tasks for a user
+      index: true,
     },
-
-    // --- The "What" ---
     title: {
       type: String,
       required: [true, "Task title is required"],
@@ -22,21 +18,16 @@ const taskSchema = new Schema(
       trim: true,
     },
     category: {
-      // For sorting and AI
       type: String,
       trim: true,
-      default: "Personal", // e.g., "Work", "Study", "Groceries"
+      default: "Personal",
     },
-
-    // --- The "When" (Pillar 1: Scheduler) ---
     dueDate: {
       type: Date,
-      // This is your 'taskDeadline'
     },
     priority: {
-      // Replaces 'taskPriority' with a clearer system
       type: String,
-      enum: ["Low", "Medium", "High"], // Use text for clarity
+      enum: ["Low", "Medium", "High"],
       default: "Medium",
     },
     status: {
@@ -44,21 +35,33 @@ const taskSchema = new Schema(
       enum: ["Pending", "In-Progress", "Completed"],
       default: "Pending",
     },
-
-    // --- The "Where" (Pillar 2: Navigator) ---
     location: {
-      // This is your 'taskLocation'
       type: Schema.Types.ObjectId,
-      ref: "Place", // Points to the 'Place' model
-      required: false, // A task doesn't *need* a location
+      ref: "Place", // This links to our PlaceModel
+      required: false,
     },
+
+    // --- NEW FIELDS FROM THE PDF ---
+    estimatedDuration: {
+      // In minutes, as per API doc
+      type: Number,
+    },
+    tags: {
+      type: [String],
+      default: [],
+    },
+    subtasks: [
+      {
+        title: { type: String, required: true },
+        completed: { type: Boolean, default: false },
+      },
+    ],
   },
   {
-    timestamps: true, // Adds createdAt, updatedAt
+    timestamps: true,
   }
 );
 
 const TaskModel = mongoose.model("Task", taskSchema);
-// Note: "Task" will become "tasks" collection
 
 export default TaskModel;

@@ -1,45 +1,47 @@
 import mongoose, { Schema } from "mongoose";
+// No longer need 'Decimal128' from 'mongodb'
 
 const placeSchema = new Schema(
   {
-    // --- The "Who" ---
     user: {
-      // Who saved this place?
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-
-    // --- The "What" ---
     name: {
-      // e.g., "Home", "Work", "Main Supermarket", "Campus Library"
+      // e.g., "Home", "Work", "Main Supermarket"
       type: String,
       required: true,
       trim: true,
     },
     address: {
-      // A human-readable address, e.g., "123 Main St"
       type: String,
       trim: true,
+      required: false,
     },
 
-    // --- The "Where" (Pillar 2: Geofencing) ---
-    // This is the most important part for location features
+    // --- THIS IS THE CORRECTED GEOJSON FIELD ---
+    // I've renamed 'linkedLocation' back to 'location' to match your index
     location: {
       type: {
         type: String,
         enum: ["Point"], // Must be 'Point' for GeoJSON
         default: "Point",
+        required: true,
       },
       coordinates: {
-        type: [Number], // Stores as [longitude, latitude]
+        type: [Number], // Must be in [longitude, latitude] order
         required: true,
       },
     },
+
     geofenceRadiusMeters: {
-      // How close to trigger a reminder? e.g., 200 meters
       type: Number,
-      default: 200,
+      default: 50, 
+    },
+    subTasks: {
+      type: [String],
+      default: [],
     },
   },
   {
@@ -48,12 +50,10 @@ const placeSchema = new Schema(
 );
 
 // --- CRITICAL ---
-// This creates a '2dsphere' index.
-// This is what allows MongoDB to run fast "near" queries
-// for your geofencing feature.
+// This line now works, because we have a field named "location"
+// that uses the correct GeoJSON format.
 placeSchema.index({ location: "2dsphere" });
 
 const PlaceModel = mongoose.model("Place", placeSchema);
-// Note: "Place" will become "places" collection
 
 export default PlaceModel;
