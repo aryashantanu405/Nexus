@@ -14,12 +14,12 @@ const router = express.Router();
 router.get("/profile", protect, getUserProfile);
 
 // ✏️ Update user details
-router.put("/profile", protect, updateUserProfile);
+router.put("/profile/updateprofile", protect, updateUserProfile);
 
 // ❌ Delete account
-router.delete("/delete", protect, deleteUser);
+router.delete("/delete/user", protect, deleteUser);
 
 // 👥 Admin: Get all users (optional)
-router.get("/all", protect, getAllUsers);
+router.get("/alluser", protect, getAllUsers);
 
 export default router;

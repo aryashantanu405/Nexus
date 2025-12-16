@@ -11,16 +11,16 @@ import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/createTask", protect, createTask);
+router.post("/createtask", protect, createTask);
 
-router.get("/getAllTasks", protect, getAllUserTasks);
+router.get("/getalltasks", protect, getAllUserTasks);
 
-router.get("/getTask/:id", protect, getTaskById);
+router.get("/gettask/:id", protect, getTaskById);
 
-router.put("/updateTask/:id", protect, updateTask);
+router.put("/updatetask/:id", protect, updateTask);
 
-router.delete("/deleteTask/:id", protect, deleteTask);
+router.delete("/deletetask/:id", protect, deleteTask);
 
-router.post("/completeTask/:id", protect, markTaskComplete);
+router.post("/completetask/:id", protect, markTaskComplete);
 
 export default router;

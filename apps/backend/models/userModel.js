@@ -10,6 +10,13 @@ const userSchema = new Schema(
       trim: true,
       index: true, // Good for performance
     },
+    name: {
+      type: String,
+      required: false,
+      lowercase: true,
+      trim: true,
+      default: "User",
+    },
     email: {
       type: String,
       required: [true, "Email is required"],
