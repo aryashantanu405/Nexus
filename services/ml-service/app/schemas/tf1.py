@@ -6,9 +6,9 @@ class TF1PriorityRequest(BaseModel):
 
     task_importance: float = Field(0.5, ge=0.0, le=1.0)
 
-    is_academic: int = Field(0, ge=0, le=1)
-    is_work: int = Field(0, ge=0, le=1)
-    is_personal: int = Field(0, ge=0, le=1)
+    category_academic: int = Field(0, ge=0, le=1)
+    category_work: int = Field(0, ge=0, le=1)
+    category_personal: int = Field(0, ge=0, le=1)
 
     user_fatigue_level: float = Field(0.5, ge=0.0, le=1.0)
     past_delay_rate: float = Field(0.0, ge=0.0, le=1.0)
