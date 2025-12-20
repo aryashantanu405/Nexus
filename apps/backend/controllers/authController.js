@@ -23,7 +23,7 @@ const generateTokens = (user) => {
 // 1️⃣ Register
 export const registerUser = async (req, res) => {
   try {
-    const { username, email, password, phoneNumber } = req.body;
+    const { username,name, email, password, phoneNumber } = req.body;
 
     if (!username || !email || !password)
       return res.status(400).json({ success: false, message: "All fields required" });
@@ -35,6 +35,7 @@ export const registerUser = async (req, res) => {
     const hashed = await bcrypt.hash(password, 10);
     const user = await UserModel.create({
       username,
+      name,
       email,
       password: hashed,
       phoneNumber,
