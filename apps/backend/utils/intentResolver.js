@@ -1,34 +1,36 @@
-export const resolveIntent = (text) => {
-  const t = text.toLowerCase().trim();
+import { llmResolveIntent } from "./llmIntent.js";
+import { keywordFallback } from "./keywordFallback.js";
 
-  if (t.includes("add") && (t.includes("location") || t.includes("place"))) {
-    return {
-      intent: "ADD_PLACE",
-      entities: {
-        placeName: extractPlaceName(t),
-      },
-    };
+/**
+ * Resolve user intent from voice text
+ * Priority:
+ * 1. LLM (only if confident)
+ * 2. Keyword fallback (guaranteed)
+ */
+export const resolveIntent = async (text) => {
+  if (!text || typeof text !== "string") {
+    return { intent: "UNKNOWN", entities: {} };
   }
 
-  if (t.includes("add") && t.includes("task")) {
-    return {
-      intent: "ADD_TASK",
-      entities: {
-        title: extractTaskTitle(t),
-      },
-    };
+  try {
+    const llmResult = await llmResolveIntent(text);
+
+    // ✅ Trust LLM ONLY if intent is meaningful
+    if (
+      llmResult &&
+      typeof llmResult === "object" &&
+      llmResult.intent &&
+      llmResult.intent !== "UNKNOWN"
+    ) {
+      return {
+        intent: llmResult.intent,
+        entities: llmResult.entities || {},
+      };
+    }
+  } catch (err) {
+    console.error("⚠️ LLM failed, using fallback");
   }
 
-  return {
-    intent: "UNKNOWN",
-    entities: {},
-  };
-};
-
-const extractPlaceName = (text) => {
-  return text.replace(/add|my|current|location|place|as|save/g, "").trim();
-};
-
-const extractTaskTitle = (text) => {
-  return text.replace(/add|task|to|me|remind/g, "").trim();
+  // ✅ Always fallback if LLM fails or returns UNKNOWN
+  return keywordFallback(text);
 };
