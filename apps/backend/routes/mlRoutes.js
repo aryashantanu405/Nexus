@@ -1,5 +1,5 @@
 import express from "express";
-import * as aiController from "../controllers/aiController.js";
+import * as aiController from "../controllers/mlController.js";
 
 const router = express.Router();
 

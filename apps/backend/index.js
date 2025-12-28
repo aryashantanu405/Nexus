@@ -6,10 +6,10 @@ import dotenv from "dotenv";
 
 import { dbConnect } from "./utils/dbConnect.js";
 import taskRoutes from "./routes/taskRoutes.js";
-import aiRoutes from "./routes/aiRoutes.js";
+import mlRoutes from "./routes/mlRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import placeRoutes from "./routes/placeRoutes.js";
-import voiceRoutes from "./routes/voiceRoutes.js";
+//import voiceRoutes from "./routes/voiceRoutes.js";
 
 import {
   findNearbyTasks,
@@ -52,10 +52,10 @@ app.get("/", (req, res) => {
 
 // REST APIs
 app.use("/api/tasks", taskRoutes);
-app.use("/api/ai", aiRoutes);
+app.use("/api/ml", mlRoutes);
 app.use("/api/auth",authRoutes);
 app.use("/api/places",placeRoutes);
-app.use("/api/voice",voiceRoutes);
+//app.use("/api/voice",voiceRoutes);
 
 // Socket events
 io.on("connection", (socket) => {
