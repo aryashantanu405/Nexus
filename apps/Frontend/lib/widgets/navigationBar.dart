@@ -13,7 +13,7 @@ SizedBox myNavigationBar(
     child: ListView.builder(
       shrinkWrap: true,
       itemCount: navNames.length,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
         bool isSelected =
@@ -31,7 +31,7 @@ SizedBox myNavigationBar(
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
-                    color: isSelected ? Color(0xff667eea) : Colors.white,
+                    color: isSelected ? const Color(0xff667eea) : Colors.white,
                   ),
 
                   child: Padding(
@@ -39,7 +39,7 @@ SizedBox myNavigationBar(
                     child: Text(
                       navNames[index],
                       style: TextStyle(
-                        color: isSelected ? Colors.white : Color(0xff333333),
+                        color: isSelected ? Colors.white : const Color(0xff333333),
                       ),
                     ),
                   ),

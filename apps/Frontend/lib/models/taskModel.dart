@@ -47,13 +47,13 @@ class TaskModel {
 
   factory TaskModel.fromJson(Map<String, dynamic> json) {
     return TaskModel(
-      title: json["title"]  == null ? null : json["title"],
-      id: json["id"] == null ? null : json["id"],
-      description: json["description"] == null ? null : json["description"],
-      category: json["category"] == null ? null : json["category"],
-      priority: json["priority"] == null ? null : json["priority"],
-      status: json["status"]  == null ? null : json["status"],
-      aiScore: json["aiScore"] == null ? null : json["aiScore"],
+      title: json["title"],
+      id: json["id"],
+      description: json["description"],
+      category: json["category"],
+      priority: json["priority"],
+      status: json["status"],
+      aiScore: json["aiScore"],
       taskLocation: json["location"] == null ? null :  LocationModel.fromJson(json["location"]),
       dueDate: json["dueDate"] == null ? null : DateModel.fromJson(json["dueDate"]),
       dateCreated: json["dateCreated"] == null ? null : DateModel.fromJson(json["dateCreated"]),

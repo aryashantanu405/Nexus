@@ -25,7 +25,7 @@ SliverToBoxAdapter customForm(
         padding: EdgeInsets.symmetric(horizontal: 20.r),
         child: Card(
           elevation: .2.r,
-          color: Color(0xffFDFEFD),
+          color: const Color(0xffFDFEFD),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
             child: Form(
@@ -34,7 +34,7 @@ SliverToBoxAdapter customForm(
                 children: [
                   ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: fields.length,
                     itemBuilder: (context, index) {
                       return Column(
@@ -51,7 +51,7 @@ SliverToBoxAdapter customForm(
                                   ),
                                   hintText: fields[index],
                                   hintStyle: TextStyle(fontSize: 14.r),
-                                  border: UnderlineInputBorder(
+                                  border: const UnderlineInputBorder(
                                     borderSide: BorderSide(
                                       color: Color(0xff667EEA),
                                     ),
@@ -81,9 +81,9 @@ SliverToBoxAdapter customForm(
                         onPress();
                       },
                       height: 35.r,
-                      child: authState == "loading" ? CircularProgressIndicator():  Text(
+                      child: authState == "loading" ? const CircularProgressIndicator():  Text(
                         buttonName1,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
@@ -115,14 +115,14 @@ Row moreInstructionWidget(String instruction, String buttonName, BuildContext co
           if(buttonName == "Register")
             {
               Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-                return RegisterView();
+                return const RegisterView();
               }));
             }
           else{
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {return LoginView();}));
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {return const LoginView();}));
           }
         },
-        style: ButtonStyle(
+        style: const ButtonStyle(
           padding: WidgetStatePropertyAll(
             EdgeInsets.symmetric(horizontal: 0, vertical: 0),
           ),
@@ -144,7 +144,7 @@ Consumer passwordField(String label, TextEditingController passwordController) {
           prefixIcon: customPrefixIcon(ImageLink.imageLink["password"] ?? ""),
           hintText: label,
           hintStyle: TextStyle(fontSize: 14.r),
-          border: UnderlineInputBorder(
+          border: const UnderlineInputBorder(
             borderSide: BorderSide(color: Color(0xff667EEA)),
           ),
           suffixIcon: IconButton(

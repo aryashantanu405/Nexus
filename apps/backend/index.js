@@ -91,9 +91,10 @@ io.on("connection", (socket) => {
 const startServer = async () => {
   try {
     await dbConnect();
-    server.listen(port, () => {
-      console.log(`🚀 Server running on http://localhost:${port}`);
-    });
+   server.listen(port, "0.0.0.0", () => {
+  console.log(`🚀 Server running on http://0.0.0.0:${port}`);
+});
+
   } catch (err) {
     console.error("❌ Startup error:", err.message);
     process.exit(1);

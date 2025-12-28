@@ -1,83 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:nexus_frontend/services/navigationBarProvider.dart';
 import 'package:nexus_frontend/views/auth/loginView.dart';
-import 'package:nexus_frontend/views/auth/registerView.dart';
 import 'package:nexus_frontend/views/home/homeView.dart';
-import 'package:nexus_frontend/views/tasks/addTask.dart';
 import 'package:nexus_frontend/views/tasks/taskView.dart';
+import 'package:nexus_frontend/views/memory/memoryView.dart';
+import 'package:nexus_frontend/views/profile/profileView.dart';
 
-import '../controllers/task/taskController.dart';
-
-class MainScreen extends ConsumerStatefulWidget {
+class MainScreen extends ConsumerWidget {
   const MainScreen({super.key});
 
   @override
-  ConsumerState<MainScreen> createState() => _MainScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currIndex = ref.watch(navigationControllerProvider);
 
-class _MainScreenState extends ConsumerState<MainScreen> {
+    const List<Widget> screens = [
+      LoginView(),   // index 0 ❌ NO NAV BAR
+      HomeView(),    // index 1
+      TaskView(),    // index 2
+      MemoryView(),  // index 3
+      ProfileView(), // index 4
+    ];
 
-  final List<Widget> _screens = [LoginView(),  HomeView(), AddTaskView(), TaskView()];
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer(builder: (context, ref, child) {
-        final _currIndex = ref.watch(navigationControllerProvider);
-        return IndexedStack(index: _currIndex, children: _screens);}, ),
-
-      bottomNavigationBar: NavigationBarTheme(
-        data: NavigationBarThemeData(
-          indicatorColor: Colors.transparent,
-          backgroundColor: Color(0xffF5F5DC),
-          surfaceTintColor: Colors.transparent,
-          labelTextStyle: WidgetStateProperty.resolveWith((states) {
-            if(states.contains(WidgetState.selected))
-              {
-                return const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff333333),
-                );
-              }
-
-            return const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: Color(0xff373D39),
-            );
-          }),
-          height: 70.r
-        ),
-        child: NavigationBar(
-          selectedIndex: 0,
-        onDestinationSelected: (index) {
-          ref.read(navigationControllerProvider.notifier).changeScreen(index);
-        }, destinations: [
-          NavigationDestination(icon: SizedBox(
-            height: 25.r,
-            width: 25.r,
-            child: Image.asset("assets/images/loginIcon.png"),
-          ), label: "Home"),
-          NavigationDestination(icon: SizedBox(
-            height: 25.r,
-            width: 25.r,
-            child: Image.asset("assets/images/loginIcon.png"),
-          ), label: "Tasks"),
-          NavigationDestination(icon: SizedBox(
-            height: 25.r,
-            width: 25.r,
-            child: Image.asset("assets/images/loginIcon.png"),
-          ), label: "Location"),
-          NavigationDestination(icon: SizedBox(
-            height: 25.r,
-            width: 25.r,
-            child: Image.asset("assets/images/loginIcon.png"),
-          ), label: "Profile"),
-
-        ]),
+      body: IndexedStack(
+        index: currIndex,
+        children: screens,
       ),
+
+      /// ✅ SHOW NAV BAR ONLY AFTER LOGIN
+      bottomNavigationBar: currIndex == 0
+          ? null
+          : NavigationBar(
+              selectedIndex: currIndex - 1, // 🔥 IMPORTANT
+              onDestinationSelected: (index) {
+                // index: 0..3 → screens: 1..4
+                ref
+                    .read(navigationControllerProvider.notifier)
+                    .changeScreen(index + 1);
+              },
+              destinations: const [
+                NavigationDestination(
+                  icon: Icon(Icons.home),
+                  label: "Home",
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.task),
+                  label: "Tasks",
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.memory),
+                  label: "Memory",
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.person),
+                  label: "Profile",
+                ),
+              ],
+            ),
     );
   }
 }

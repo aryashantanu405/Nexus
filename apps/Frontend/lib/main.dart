@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nexus_frontend/controllers/auth/authController.dart';
-import 'package:nexus_frontend/views/home/homeView.dart';
 import 'package:nexus_frontend/views/mainScreen.dart';
-import 'package:nexus_frontend/views/tasks/taskView.dart';
 
 
 
 void main() {
-  runApp(ProviderScope(child: const MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
