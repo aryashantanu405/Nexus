@@ -21,7 +21,7 @@ class _TaskViewState extends ConsumerState<TaskView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff8f9fa),
+      backgroundColor: const Color(0xfff8f9fa),
       body: CustomScrollView(
         slivers: [
           myAppBar(
@@ -34,7 +34,7 @@ class _TaskViewState extends ConsumerState<TaskView> {
             child: Consumer(
               builder: (context, ref, child) {
                 final taskListProvider = ref.watch(taskControllerProvider);
-                return taskListProvider.loading ?  CircularProgressIndicator() :
+                return taskListProvider.loading ?  const CircularProgressIndicator() :
                  Column(
                   children: [
                     myNavigationBar(
@@ -44,7 +44,7 @@ class _TaskViewState extends ConsumerState<TaskView> {
                     ),
                     ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: taskListProvider.currentCategoryTasks.length,
                       itemBuilder: (context, index) {
                         return TaskCard(
@@ -66,7 +66,7 @@ class _TaskViewState extends ConsumerState<TaskView> {
         child: Container(
           height: 60.r,
           width: 60.r,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
             gradient: LinearGradient(
               colors: [Color(0xff667eea), Color(0xff764ba2)],
@@ -75,7 +75,7 @@ class _TaskViewState extends ConsumerState<TaskView> {
             ),
           ),
 
-          child: Icon(Icons.add, color: Colors.white),
+          child: const Icon(Icons.add, color: Colors.white),
         ),
       ),
     );

@@ -53,7 +53,7 @@ class AuthRepository {
     }
     on DioException catch(err)
     {
-      print("Error aaya  -> " + err.toString());
+      print("Error aaya  -> $err");
       return null;
     }
   }

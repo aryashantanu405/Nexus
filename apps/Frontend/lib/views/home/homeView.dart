@@ -7,6 +7,12 @@ import 'package:nexus_frontend/controllers/user/userController.dart';
 import 'package:nexus_frontend/utils/homeScreenOutlineButton.dart';
 import 'package:nexus_frontend/widgets/sliverAppBar.dart';
 import 'package:nexus_frontend/widgets/taskCard.dart';
+import 'package:nexus_frontend/views/tasks/addTask.dart';
+import 'package:nexus_frontend/views/map/contextMapView.dart';
+import 'package:nexus_frontend/views/focus/focusView.dart';
+import 'package:nexus_frontend/views/analytics/analyticsView.dart';
+
+
 
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
@@ -19,7 +25,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff8f9fa),
+      backgroundColor: const Color(0xfff8f9fa),
       body: CustomScrollView(
         slivers: [
           myAppBar(
@@ -53,7 +59,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     "Today's Priority Tasks",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Color(0xff0ff667eea),
+                      color: const Color(0xff0ff667eea),
                       fontSize: 18.r,
                       fontFamily: "Inter",
                     ),
@@ -62,10 +68,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   Consumer(
                     builder: (context, ref, child) {
                       final allTasks = ref.watch(taskControllerProvider);
-                      return  allTasks.loading ? CircularProgressIndicator() : ListView.builder(
+                      return  allTasks.loading ? const CircularProgressIndicator() : ListView.builder(
                         itemCount: allTasks.currentCategoryTasks.length,
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           return Column(
                             children: [
@@ -84,34 +90,67 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          HomeScreenOutlinedButton(
-                            "assets/images/loginIcon.png",
-                            "Add Task",
-                          ),
-                          SizedBox(width: 5.r),
-                          HomeScreenOutlinedButton(
-                            "assets/images/loginIcon.png",
-                            "Start Focus",
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10.r),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          HomeScreenOutlinedButton(
-                            "assets/images/loginIcon.png",
-                            "View Map",
-                          ),
-                          SizedBox(width: 5.r),
-                          HomeScreenOutlinedButton(
-                            "assets/images/loginIcon.png",
-                            "Analytics",
-                          ),
-                        ],
-                      ),
+  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  children: [
+    HomeScreenOutlinedButton(
+      "assets/images/loginIcon.png",
+      "Add Task",
+      () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const AddTaskView(),
+          ),
+        );
+      },
+    ),
+    SizedBox(width: 5.r),
+    HomeScreenOutlinedButton(
+      "assets/images/loginIcon.png",
+      "Start Focus",
+      () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const FocusView(),
+          ),
+        );
+      },
+    ),
+  ],
+),
+SizedBox(height: 10.r),
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  children: [
+    HomeScreenOutlinedButton(
+      "assets/images/loginIcon.png",
+      "View Map",
+      () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const ContextMapView(),
+          ),
+        );
+      },
+    ),
+    SizedBox(width: 5.r),
+    HomeScreenOutlinedButton(
+      "assets/images/loginIcon.png",
+      "Analytics",
+      () {
+        Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const AnalyticsView(),
+      ),
+    );
+      },
+    ),
+  ],
+),
+
                     ],
                   ),
                 ],
@@ -145,7 +184,7 @@ Column greetingCard(String userName) {
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontFamily: "Inter",
-          color: Color(0xff667eea),
+          color: const Color(0xff667eea),
           fontSize: 30.r,
         ),
       ),
@@ -153,7 +192,7 @@ Column greetingCard(String userName) {
       Text(
         DateFormat('EEEE, MMMM d, yyyy').format(currTime).toString(),
         style: TextStyle(
-          color: Color(0xff333333),
+          color: const Color(0xff333333),
           fontSize: 15.5.r,
           fontWeight: FontWeight.w200,
         ),
@@ -170,7 +209,7 @@ Flexible aiInsightCard(String insight, BuildContext context) {
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             colors: [Color(0xff667eea), Color(0xff764ba2)],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
@@ -200,7 +239,7 @@ Flexible aiInsightCard(String insight, BuildContext context) {
                         child: Image.asset("assets/images/loginIcon.png"),
                       ),
                       SizedBox(width: 4.r),
-                      Text(
+                      const Text(
                         "AI Insight",
                         style: TextStyle(color: Colors.white, fontSize: 13),
                       ),
@@ -209,7 +248,7 @@ Flexible aiInsightCard(String insight, BuildContext context) {
                 ),
               ),
               SizedBox(height: 5.r),
-              Text(
+              const Text(
                 "Your best focus time is 2-4 PM today. I've scheduled your assignment work during this window.",
                 style: TextStyle(color: Colors.white),
               ),

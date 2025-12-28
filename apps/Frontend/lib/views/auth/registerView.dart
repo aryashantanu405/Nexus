@@ -11,7 +11,7 @@ import 'package:nexus_frontend/widgets/sliverAppBar.dart';
 import '../../widgets/myForm.dart';
 
 class RegisterView extends ConsumerStatefulWidget {
-   RegisterView({super.key});
+   const RegisterView({super.key});
 
 
 

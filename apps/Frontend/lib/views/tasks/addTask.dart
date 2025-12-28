@@ -25,7 +25,7 @@ class _AddTaskViewState extends ConsumerState<AddTaskView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff8f9fa),
+      backgroundColor: const Color(0xfff8f9fa),
 
       body: CustomScrollView(
         slivers: [
@@ -83,7 +83,7 @@ SliverToBoxAdapter basicTaskFeatureForm(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  fillColor: Color(0xffE1E5E0),
+                  fillColor: const Color(0xffE1E5E0),
                   filled: true,
                 ),
               ),
@@ -107,7 +107,7 @@ SliverToBoxAdapter basicTaskFeatureForm(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  fillColor: Color(0xffE1E5E0),
+                  fillColor: const Color(0xffE1E5E0),
                   filled: true,
                 ),
               ),
@@ -136,7 +136,7 @@ SliverToBoxAdapter basicTaskFeatureForm(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  fillColor: Color(0xffE1E5E0),
+                  fillColor: const Color(0xffE1E5E0),
                   filled: true,
                 ),
               ),
@@ -156,9 +156,9 @@ SliverToBoxAdapter basicTaskFeatureForm(
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      radioButton("LOW", Color(0xff09B43F), ref),
-                      radioButton("MEDIUM", Color(0xffEE510D), ref),
-                      radioButton("HIGH", Color(0xffC50909), ref),
+                      radioButton("LOW", const Color(0xff09B43F), ref),
+                      radioButton("MEDIUM", const Color(0xffEE510D), ref),
+                      radioButton("HIGH", const Color(0xffC50909), ref),
                     ],
                   );
                 },
@@ -182,7 +182,7 @@ SliverToBoxAdapter basicTaskFeatureForm(
                   height: 50.r,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.r),
-                    color: Color(0xffE1E5E0)
+                    color: const Color(0xffE1E5E0)
                   ),
                   child: Padding(
                     padding:  EdgeInsets.all(15.r),
@@ -193,12 +193,12 @@ SliverToBoxAdapter basicTaskFeatureForm(
                           builder: (context, ref, child) {
                             final selectedDate = ref.watch(addTaskScreenSateProvider.select((screenStatus) => screenStatus.dueDate));
                             return selectedDate.year == 0 ?
-                                Text("Select date")
+                                const Text("Select date")
                              : Text(DateFormat.yMMMMd().format(selectedDate));
                           },
 
                         ),
-                        Image(height: 25.r.r, width: 25.r, image: AssetImage("assets/images/calendar_icon.png"))
+                        Image(height: 25.r.r, width: 25.r, image: const AssetImage("assets/images/calendar_icon.png"))
                       ],
                     )
                   ),
@@ -225,7 +225,7 @@ SliverToBoxAdapter basicTaskFeatureForm(
                   );
                   return ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: allSubtasks.length,
                     itemBuilder: (context, index) {
                       return allSubtasks[index].saved
@@ -267,7 +267,7 @@ SliverToBoxAdapter basicTaskFeatureForm(
                   ref.read(addTaskScreenSateProvider.notifier).addNewSubtask();
                   subtaskTitleControllers.add(TextEditingController());
                 },
-                child: Text(
+                child: const Text(
                   "Add Subtask",
                   style: TextStyle(
                     color: Colors.white,
@@ -289,7 +289,7 @@ SliverToBoxAdapter basicTaskFeatureForm(
                   onPressed: () async{
                     if (taskTitleController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Task title can't be empty")),
+                        const SnackBar(content: Text("Task title can't be empty")),
                       );
                       return;
                     }
@@ -301,7 +301,7 @@ SliverToBoxAdapter basicTaskFeatureForm(
                     for (TempSubtaskModel task in allSubtasks) {
                       if (task.saved == false || task.title.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
+                          const SnackBar(
                             content: Text(
                               "No subtask can be unsaved or subtask title can't be empty",
                             ),
@@ -333,7 +333,7 @@ SliverToBoxAdapter basicTaskFeatureForm(
 
 
                   },
-                  child: Text(
+                  child: const Text(
                     "Submit",
                     style: TextStyle(
                       color: Colors.white,
@@ -346,7 +346,7 @@ SliverToBoxAdapter basicTaskFeatureForm(
                 height: 40.r,
                 child: OutlinedButton(
                   onPressed: () {},
-                  child: Text(
+                  child: const Text(
                     "Discard",
                     style: TextStyle(color: Color(0xff333333)),
                   ),
@@ -379,7 +379,7 @@ Widget radioButton(String label, Color labelColor, WidgetRef ref) {
           width: 20.r,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: Color(0xff333333), width: 1),
+            border: Border.all(color: const Color(0xff333333), width: 1),
           ),
 
           child: Padding(
@@ -391,8 +391,8 @@ Widget radioButton(String label, Color labelColor, WidgetRef ref) {
                 shape: BoxShape.circle,
                 color:
                     selectedLabel.toLowerCase() == label.toLowerCase()
-                        ? Color(0xffCBCFCA)
-                        : Color(0xfff8f9fa),
+                        ? const Color(0xffCBCFCA)
+                        : const Color(0xfff8f9fa),
               ),
             ),
           ),
@@ -415,7 +415,7 @@ Widget savedSubtaskWidget(String taskTitle, WidgetRef ref, int index) {
   return Container(
     height: 50.r,
     decoration: BoxDecoration(
-      color: Color(0xffE1E5E0),
+      color: const Color(0xffE1E5E0),
       borderRadius: BorderRadius.circular(10),
     ),
     child: Padding(
@@ -431,7 +431,7 @@ Widget savedSubtaskWidget(String taskTitle, WidgetRef ref, int index) {
             child: Image(
               height: 20.r,
               width: 20.r,
-              image: AssetImage("assets/images/right_icon.png"),
+              image: const AssetImage("assets/images/right_icon.png"),
             ),
           ),
         ],
@@ -447,7 +447,7 @@ Widget unsavedSubtaskWidget(
 ) {
   return Container(
     decoration: BoxDecoration(
-      color: Color(0xffE1E5E0),
+      color: const Color(0xffE1E5E0),
       borderRadius: BorderRadius.circular(10),
     ),
     child: Padding(
@@ -477,7 +477,7 @@ Widget unsavedSubtaskWidget(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  fillColor: Color(0xfff8f9fa),
+                  fillColor: const Color(0xfff8f9fa),
                   filled: true,
                 ),
               ),
@@ -498,9 +498,9 @@ Widget unsavedSubtaskWidget(
                     Image(
                       width: 20.r,
                       height: 20.r,
-                      image: AssetImage("assets/images/save_icon.png"),
+                      image: const AssetImage("assets/images/save_icon.png"),
                     ),
-                    Text("Save", style: TextStyle(fontWeight: FontWeight.w500)),
+                    const Text("Save", style: TextStyle(fontWeight: FontWeight.w500)),
                   ],
                 ),
               ),
@@ -516,9 +516,9 @@ Widget unsavedSubtaskWidget(
                     Image(
                       width: 20.r,
                       height: 20.r,
-                      image: AssetImage("assets/images/delete_icon.png"),
+                      image: const AssetImage("assets/images/delete_icon.png"),
                     ),
-                    Text(
+                    const Text(
                       "Delete",
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),

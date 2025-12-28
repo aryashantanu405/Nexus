@@ -1,4 +1,6 @@
-import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+
 
 final passwordProvider = StateNotifierProvider<PasswordNotifier, bool>((ref){
   return PasswordNotifier();

@@ -5,7 +5,7 @@ SliverAppBar myAppBar(String heading, String subheading, String imagePath) {
     pinned: true,
     toolbarHeight: 80,
     flexibleSpace: Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [Color(0xff667eea), Color(0xff764ba2)],
           begin: Alignment.centerLeft,
@@ -23,14 +23,14 @@ SliverAppBar myAppBar(String heading, String subheading, String imagePath) {
               SizedBox(height: 50,
                   width: 50,
                   child: Image.asset(imagePath)),
-              Text(heading, style: TextStyle(
+              Text(heading, style: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20, letterSpacing: 1,
                 fontFamily: 'Inter'
               ),)
             ],
           ),
 
-          Text(subheading, style: TextStyle(color: Colors.white, fontFamily: "Inter", letterSpacing: .3),)
+          Text(subheading, style: const TextStyle(color: Colors.white, fontFamily: "Inter", letterSpacing: .3),)
         ],
       ),
     ),

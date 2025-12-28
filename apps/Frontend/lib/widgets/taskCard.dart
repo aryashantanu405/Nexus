@@ -9,8 +9,8 @@ Card TaskCard(TaskModel myTask, BuildContext context) {
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: Color(0xfff8f9fa),
-        border: BorderDirectional(
+        color: const Color(0xfff8f9fa),
+        border: const BorderDirectional(
           start: BorderSide(
             width: 4,
             color: Color(0xff667eea),
@@ -28,14 +28,14 @@ Card TaskCard(TaskModel myTask, BuildContext context) {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Flexible(fit: FlexFit.tight, child: Text(myTask.title, style: TextStyle(
+                Flexible(fit: FlexFit.tight, child: Text(myTask.title, style: const TextStyle(
                   fontWeight: FontWeight.bold, fontSize: 16, fontFamily: "Inter", color: Color(0xff333333)
                 ),)),
                 SizedBox(width: 5.r),
 
                 myTask.priority != null
                     ? priorityBadge(myTask.priority ?? "")
-                    : SizedBox(height: 0, width: 0),
+                    : const SizedBox(height: 0, width: 0),
               ],
             ),
             SizedBox(height: 5.r,),
