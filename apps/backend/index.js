@@ -9,6 +9,7 @@ import taskRoutes from "./routes/taskRoutes.js";
 import mlRoutes from "./routes/mlRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import placeRoutes from "./routes/placeRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 //import voiceRoutes from "./routes/voiceRoutes.js";
 
 import {
@@ -43,8 +44,9 @@ app.get("/", (req, res) => {
     apis: {
       auth: "/api/auth",
       tasks: "/api/tasks",
-      ai: "/api/ai",
+      ml: "/api/ml",
       places: "/api/places",
+      users:"/api/users"
     },
     socket: "Socket.IO enabled",
   });
@@ -55,6 +57,7 @@ app.use("/api/tasks", taskRoutes);
 app.use("/api/ml", mlRoutes);
 app.use("/api/auth",authRoutes);
 app.use("/api/places",placeRoutes);
+app.use("/api/users",userRoutes)
 //app.use("/api/voice",voiceRoutes);
 
 // Socket events
