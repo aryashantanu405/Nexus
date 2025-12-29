@@ -1,5 +1,6 @@
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:flutter_riverpod/legacy.dart';
 
 
 class NavigationController extends StateNotifier<int>{
@@ -10,6 +11,8 @@ class NavigationController extends StateNotifier<int>{
   {
     state = screenIndex;
   }
+
+
 }
 
 final navigationControllerProvider = StateNotifierProvider<NavigationController, int>((ref) {

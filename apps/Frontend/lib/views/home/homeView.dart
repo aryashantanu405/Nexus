@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:nexus_frontend/controllers/auth/authController.dart';
 import 'package:nexus_frontend/controllers/task/taskController.dart';
 import 'package:nexus_frontend/controllers/user/userController.dart';
 import 'package:nexus_frontend/utils/homeScreenOutlineButton.dart';
@@ -42,7 +43,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 children: [
                   Consumer(
                     builder: (context, ref, child) {
-                      final user = ref.watch(userControllerProvider);
+                      final user = ref.watch(authControllerProvider);
                       return greetingCard(user.currentUser?.name ?? "Guest");
                     },
                   ),

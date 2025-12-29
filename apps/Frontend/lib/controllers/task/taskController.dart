@@ -1,5 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:nexus_frontend/models/taskModel.dart';
 import 'package:nexus_frontend/repository/taskRepository.dart';
 
@@ -29,7 +30,7 @@ class TaskController extends StateNotifier<TaskScreenStatus> {
       final allCategories = ["All", ...distinct];
       state = state.copyWith("all", safeTasks, safeTasks, allCategories, false);
     }
-        catch(err)
+        catch(err, st)
     {
       print(err.toString());
     }

@@ -9,6 +9,8 @@ import 'package:nexus_frontend/widgets/myForm.dart';
 import 'package:nexus_frontend/widgets/sliverAppBar.dart';
 import 'package:nexus_frontend/views/others/termsAndConditionsView.dart';
 
+import '../mainScreen.dart';
+
 class LoginView extends ConsumerStatefulWidget {
   const LoginView({super.key});
 
@@ -51,14 +53,19 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   .read(authControllerProvider.notifier)
                   .login(emailController.text, passwordController.text);
 
-              await ref.read(userControllerProvider.notifier).loadUser();
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const MainScreen()),
+                    (_) => false,
+              );
 
-              ref
-                  .read(navigationControllerProvider.notifier)
-                  .changeScreen(1); // Home
+
+              // ref
+              //     .read(navigationControllerProvider.notifier)
+              //     .changeScreen(1); // Home
             },
             [emailController, passwordController],
-            authState,
+            authState.authStatus,
           ),
 
           /// CONTINUE TO HOME

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:nexus_frontend/models/userModel.dart';
 import 'package:nexus_frontend/services/api_services/authService.dart';
 

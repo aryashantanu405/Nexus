@@ -68,7 +68,7 @@ class _ToggleTileState extends State<_ToggleTile> {
       child: SwitchListTile(
         value: value,
         onChanged: (v) => setState(() => value = v),
-        activeThumbColor: const Color(0xff667eea),
+        inactiveThumbColor: const Color(0xff667eea),
         title: Text(
           widget.title,
           style: const TextStyle(fontWeight: FontWeight.w600),
