@@ -91,7 +91,7 @@ class SettingsView extends StatelessWidget {
       value: true,
       onChanged: (_) {},
       title: Text(label),
-      activeThumbColor: const Color(0xff667eea),
+      inactiveThumbColor: const Color(0xff667eea),
     );
   }
 

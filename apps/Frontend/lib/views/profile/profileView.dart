@@ -12,11 +12,14 @@ import 'package:nexus_frontend/views/others/aboutAppView.dart';
 import 'package:nexus_frontend/controllers/auth/authController.dart';
 import 'package:nexus_frontend/services/navigationBarProvider.dart';
 
+import '../../models/userModel.dart';
+
 class ProfileView extends ConsumerWidget {
   const ProfileView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final myUser = ref.watch(authControllerProvider.select((userState) => userState.currentUser));
     return Scaffold(
       backgroundColor: const Color(0xfff6f7fb),
       body: CustomScrollView(
@@ -31,7 +34,7 @@ class ProfileView extends ConsumerWidget {
               padding: EdgeInsets.all(16.r),
               child: Column(
                 children: [
-                  _profileHeader(context),
+                  _profileHeader(context, myUser, ref),
                   SizedBox(height: 20.r),
 
                   /// 🔔 Notifications
@@ -111,7 +114,7 @@ class ProfileView extends ConsumerWidget {
     );
   }
 
-  Widget _profileHeader(BuildContext context) {
+  Widget _profileHeader(BuildContext context, UserModel? user, WidgetRef ref) {
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
@@ -127,12 +130,12 @@ class ProfileView extends ConsumerWidget {
             backgroundImage: AssetImage("assets/images/loginIcon.png"),
           ),
           SizedBox(width: 16.r),
-          const Expanded(
+           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Trinetra Parmar",
+                  user?.name ?? "Guest",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -152,7 +155,7 @@ class ProfileView extends ConsumerWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => const EditProfileView(),
+                  builder: (_) =>  EditProfileView(),
                 ),
               );
             },

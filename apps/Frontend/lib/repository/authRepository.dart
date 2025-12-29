@@ -10,28 +10,37 @@ class AuthRepository {
 
   AuthRepository(this.dio, this.tokenStorage);
 
-  Future<void> loginUser(String email, String password) async {
+  Future<bool> loginUser(String email, String password) async {
     try {
       final response = await dio.post(
         "/auth/login",
         data: {"email": email, "password": password},
       );
 
+      if(response.statusCode != 200)
+        {
+          print(response.data);
+          return false;
+        }
+
+
+
       final data = response.data;
 
       await tokenStorage.saveAccessToken(data["tokens"]["accessToken"]);
       await tokenStorage.saveRefreshToken(data["tokens"]["refreshToken"]);
 
+      return true;
+
     } on DioException catch (e) {
       print(e.response?.data ?? e.message);
-
+      return false;
     }
   }
 
   Future<void> registerUser(UserModel user) async {
     try {
       final response = await dio.post("/auth/register", data: user.toJson());
-
       await tokenStorage.saveAccessToken(response.data["tokens"]["accessToken"]);
       await tokenStorage.saveRefreshToken(response.data["tokens"]["refreshToken"]);
 
@@ -56,6 +65,30 @@ class AuthRepository {
       print("Error aaya  -> $err");
       return null;
     }
+  }
+  
+  Future<UserModel?> updateUser(UserModel updatedUser) async
+  {
+
+    try{
+      final response = await dio.put("/users/profile/updateprofile", data: updatedUser.toJson());
+
+      if(response.statusCode != 200)
+        {
+          return null;
+        }
+
+      final UserModel newUser = UserModel.fromJson(response.data["user"]);
+
+      return newUser;
+    }
+        on DioException catch(err)
+    {
+      print(err.response);
+      return null;
+    }
+
+
   }
 
   Future<void> logout() async {

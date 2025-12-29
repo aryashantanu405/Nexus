@@ -40,7 +40,7 @@ class TaskModel {
       "description" : description,
       "category" : category,
       "priority" : priority,
-      "dueDate" : dueDate?.toJson(),
+      "dueDate" : "${dueDate?.year}-${dueDate?.month}-${dueDate?.day}",
       "subtasks" : subtasks?.map((subtask) => subtask.toJson()).toList()
     };
   }

@@ -9,6 +9,7 @@ import 'package:nexus_frontend/models/userModel.dart';
 import 'package:nexus_frontend/widgets/sliverAppBar.dart';
 
 import '../../widgets/myForm.dart';
+import '../mainScreen.dart';
 
 class RegisterView extends ConsumerStatefulWidget {
    const RegisterView({super.key});
@@ -47,10 +48,16 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
 
               UserModel newUser = UserModel(name: nameController.text, email: emailController.text, username: usernameController.text, password: passwordController.text);
               await ref.read(authControllerProvider.notifier).registerUser(newUser);
-              await ref.read(userControllerProvider.notifier).loadUser();
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const MainScreen()),
+                    (_) => false,
+              );
+
+
               },
             [nameController, emailController, usernameController, passwordController],
-            authStatus
+            authStatus.authStatus
 
           ),
         ],

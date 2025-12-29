@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nexus_frontend/controllers/auth/authController.dart';
+import 'package:nexus_frontend/views/auth/loginView.dart';
 import 'package:nexus_frontend/views/mainScreen.dart';
 
 
@@ -27,7 +28,7 @@ class MyApp extends ConsumerWidget {
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           ),
-          home:  const MainScreen(),
+          home: authState.authStatus == AuthStatus.authenticated ?  const MainScreen() : const LoginView(),
         );
       },
     );

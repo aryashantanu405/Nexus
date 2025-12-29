@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 import 'package:nexus_frontend/models/userModel.dart';
 import 'package:nexus_frontend/repository/aiRepository.dart';
@@ -47,6 +48,8 @@ class UserController extends StateNotifier<UserState> {
       debugPrint("loadAIInsight error: $e");
     }
   }
+
+
 
   /// ✅ Clear on logout
   void clear() {

@@ -81,7 +81,7 @@ SliverToBoxAdapter customForm(
                         onPress();
                       },
                       height: 35.r,
-                      child: authState == "loading" ? const CircularProgressIndicator():  Text(
+                      child: authState == AuthStatus.loading ? const CircularProgressIndicator():  Text(
                         buttonName1,
                         style: const TextStyle(
                           color: Colors.white,
@@ -114,12 +114,10 @@ Row moreInstructionWidget(String instruction, String buttonName, BuildContext co
         onPressed: () {
           if(buttonName == "Register")
             {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-                return const RegisterView();
-              }));
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const RegisterView()));
             }
           else{
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {return const LoginView();}));
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginView()));
           }
         },
         style: const ButtonStyle(
