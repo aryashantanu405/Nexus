@@ -10,7 +10,6 @@ import 'package:nexus_frontend/views/profile/profileView.dart';
 
 import 'package:nexus_frontend/views/tasks/taskView.dart';
 
-import '../controllers/task/taskController.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});

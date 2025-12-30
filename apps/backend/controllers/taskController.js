@@ -20,6 +20,8 @@ export const createTask = async (req, res) => {
     subtasks,
   } = req.body;
 
+  dueDate = Date(dueDate);
+
   const userId = req.user.id;
 
   if (!title) {
@@ -65,6 +67,8 @@ export const createTask = async (req, res) => {
       location: placeId,
       status: "Pending",
     });
+
+    
 
     await UserModel.findByIdAndUpdate(userId, {
       $push: { tasks: task._id },

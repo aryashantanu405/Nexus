@@ -50,13 +50,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
             () async {
               await ref
                   .read(authControllerProvider.notifier)
-                  .login(emailController.text, passwordController.text);
+                  .login(emailController.text.trim(), passwordController.text.trim());
 
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => const MainScreen()),
-                    (_) => false,
-              );
+
 
 
               // ref
@@ -64,7 +60,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
               //     .changeScreen(1); // Home
             },
             [emailController, passwordController],
-            authState.authStatus,
+            authState.authStatus, ref
           ),
 
           /// CONTINUE TO HOME

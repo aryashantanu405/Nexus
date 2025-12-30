@@ -48,16 +48,12 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
 
               UserModel newUser = UserModel(name: nameController.text, email: emailController.text, username: usernameController.text, password: passwordController.text);
               await ref.read(authControllerProvider.notifier).registerUser(newUser);
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => const MainScreen()),
-                    (_) => false,
-              );
+
 
 
               },
             [nameController, emailController, usernameController, passwordController],
-            authStatus.authStatus
+            authStatus.authStatus, ref
 
           ),
         ],

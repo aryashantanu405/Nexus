@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:nexus_frontend/services/navigationBarProvider.dart';
 
 import 'package:nexus_frontend/widgets/sliverAppBar.dart';
 import 'package:nexus_frontend/views/profile/editProfileView.dart';
@@ -10,7 +11,7 @@ import 'package:nexus_frontend/views/others/helpCenterView.dart';
 import 'package:nexus_frontend/views/others/aboutAppView.dart';
 
 import 'package:nexus_frontend/controllers/auth/authController.dart';
-import 'package:nexus_frontend/services/navigationBarProvider.dart';
+
 
 import '../../models/userModel.dart';
 
@@ -98,11 +99,10 @@ class ProfileView extends ConsumerWidget {
                     icon: Icons.logout,
                     title: "Logout",
                     isDestructive: true,
-                    onTap: () {
-                      ref.read(authControllerProvider.notifier).logout();
-                      ref
-                          .read(navigationControllerProvider.notifier)
-                          .changeScreen(0); // back to Login tab
+                    onTap: () async{
+                      await ref.read(authControllerProvider.notifier).logout();
+                      ref.read(navigationControllerProvider.notifier).reset();
+                       // back to Login tab
                     },
                   ),
                 ],
