@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:latlong2/latlong.dart';
 
 
 import '../../models/taskModel.dart';
 
 class AddTaskScreenController extends StateNotifier<AddTaskScreenState> {
-  AddTaskScreenController() : super(AddTaskScreenState(normalTask: TaskModel(title: ""), selectedPriority: "low", tempSubtasks: [], dueDate: DateTime(0), urgencyScore: .5));
+  AddTaskScreenController() : super(AddTaskScreenState(normalTask: TaskModel(title: ""), selectedPriority: "low", tempSubtasks: [], dueDate: DateTime(0), urgencyScore: .5, taskLocation: LatLng(0, 0), isLocationReady: false));
 
   void changePriority(String label) {
-    state = state.copyWith(label.toLowerCase(), null, null, null, null);
+    state = state.copyWith(label.toLowerCase(), null, null, null, null, null, null);
   }
 
   void addNewSubtask()
   {
     final newTempSubtask = TempSubtaskModel(title: "", saved: false);
-    state = state.copyWith(null, [...state.tempSubtasks, newTempSubtask], null, null, null);
+    state = state.copyWith(null, [...state.tempSubtasks, newTempSubtask], null, null, null, null, null);
   }
 
   void saveASubtask(String title, int index)
@@ -22,21 +23,21 @@ class AddTaskScreenController extends StateNotifier<AddTaskScreenState> {
     List<TempSubtaskModel> myTempSubtaskList = state.tempSubtasks;
     myTempSubtaskList[index].title = title;
     myTempSubtaskList[index].saved = true;
-    state = state.copyWith(null, [...myTempSubtaskList], null, null, null);
+    state = state.copyWith(null, [...myTempSubtaskList], null, null, null, null, null);
   }
 
   void deleteSubtask(int index)
   {
     List<TempSubtaskModel> myTempSubtaskList = state.tempSubtasks;
     myTempSubtaskList.removeAt(index);
-    state = state.copyWith(null, [...myTempSubtaskList], null, null, null);
+    state = state.copyWith(null, [...myTempSubtaskList], null, null, null, null, null);
   }
 
   void editTask(int index)
   {
     List<TempSubtaskModel> myTempSubtaskList = state.tempSubtasks;
     myTempSubtaskList[index].saved = false;
-    state = state.copyWith(null, [...myTempSubtaskList], null, null, null);
+    state = state.copyWith(null, [...myTempSubtaskList], null, null, null, null, null);
   }
 
 
@@ -47,13 +48,31 @@ class AddTaskScreenController extends StateNotifier<AddTaskScreenState> {
     if(picked != null && picked != DateTime.now())
       {
 
-        state = state.copyWith(null, null, null, picked, null);
+        state = state.copyWith(null, null, null, picked, null, null, null);
       }
   }
 
   void changeUrgencyScore(double urgencyScore)
   {
-    state = state.copyWith(null, null, null, null, urgencyScore);
+    state = state.copyWith(null, null, null, null, urgencyScore, null, null);
+  }
+
+  void updateTaskLocation(LatLng position)
+  {
+
+    if(!position.latitude.isFinite || !position.longitude.isFinite)
+      {
+        debugPrint('Provider rejected invalid location: $position');
+        return;
+      }
+
+    state = state.copyWith(null, null, null, null, null, position, true);
+
+  }
+
+  void reset()
+  {
+    state = state.copyWith("low", [], TaskModel(title: ""), DateTime(0), .5, LatLng(0, 0), false);
   }
 
 
@@ -72,13 +91,18 @@ class AddTaskScreenState {
   final TaskModel normalTask;
   final DateTime dueDate;
   final double urgencyScore;
+  final LatLng taskLocation;
+  final bool isLocationReady;
 
   AddTaskScreenState({
     required this.normalTask,
     required this.selectedPriority,
     required this.tempSubtasks,
     required this.dueDate,
-    required this.urgencyScore
+    required this.urgencyScore,
+    required this.taskLocation,
+    required this.isLocationReady
+
   });
 
   AddTaskScreenState copyWith(
@@ -86,14 +110,18 @@ class AddTaskScreenState {
     List<TempSubtaskModel>? tempSubtasks,
     TaskModel? normalTask,
       DateTime? dueDate,
-      double? urgencyScore
+      double? urgencyScore,
+      LatLng? taskLocation,
+      bool? isLocationReady
   ) {
     return AddTaskScreenState(
       normalTask: normalTask ?? this.normalTask,
       selectedPriority: selectedPriority ?? this.selectedPriority,
       tempSubtasks: tempSubtasks ?? this.tempSubtasks,
       dueDate: dueDate ?? this.dueDate,
-      urgencyScore: urgencyScore ?? this.urgencyScore
+      urgencyScore: urgencyScore ?? this.urgencyScore,
+      taskLocation: taskLocation ?? this.taskLocation,
+      isLocationReady: isLocationReady ?? this.isLocationReady
     );
   }
 }

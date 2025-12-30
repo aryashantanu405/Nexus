@@ -17,7 +17,8 @@ SliverToBoxAdapter customForm(
   BuildContext context,
   Function() onPress,
   List<TextEditingController> textEditingControllers,
-    AuthStatus authState
+    AuthStatus authState,
+    WidgetRef ref
 ) {
   return SliverToBoxAdapter(
     child: Center(
@@ -94,7 +95,7 @@ SliverToBoxAdapter customForm(
 
                   SizedBox(height: 5.r),
 
-                  moreInstructionWidget(instruction, buttonName2, context),
+                  moreInstructionWidget(instruction, buttonName2, context, ref),
                 ],
               ),
             ),
@@ -105,7 +106,7 @@ SliverToBoxAdapter customForm(
   );
 }
 
-Row moreInstructionWidget(String instruction, String buttonName, BuildContext context) {
+Row moreInstructionWidget(String instruction, String buttonName, BuildContext context, WidgetRef ref) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
@@ -114,10 +115,10 @@ Row moreInstructionWidget(String instruction, String buttonName, BuildContext co
         onPressed: () {
           if(buttonName == "Register")
             {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const RegisterView()));
+              ref.read(authControllerProvider.notifier).goToRegisterScreen();
             }
           else{
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginView()));
+            ref.read(authControllerProvider.notifier).goToLoginScreen();
           }
         },
         style: const ButtonStyle(

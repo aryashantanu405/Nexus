@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:nexus_frontend/controllers/location/locationController.dart';
 import 'package:nexus_frontend/controllers/task/taskController.dart';
 import 'package:nexus_frontend/models/dateModel.dart';
 import 'package:nexus_frontend/models/subtaskModel.dart';
 import 'package:nexus_frontend/models/taskModel.dart';
 import 'package:nexus_frontend/services/providers/radioButtonProvider.dart';
+import 'package:nexus_frontend/views/auth/loginView.dart';
+import 'package:nexus_frontend/views/map/locationPickerView.dart';
 import 'package:nexus_frontend/widgets/gradientButton.dart';
 import 'package:nexus_frontend/widgets/sliverAppBar.dart';
 
@@ -228,14 +231,76 @@ SliverToBoxAdapter basicTaskFeatureForm(
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13.r),
               ),
               SizedBox(height: 10.r),
-              Consumer( builder: (context, ref, child) {
-                final sliderVal = ref.watch(addTaskScreenSateProvider.select((screenStatus) => screenStatus.urgencyScore));
-                return Slider(value: sliderVal, onChanged: (value){
-                  ref.read(addTaskScreenSateProvider.notifier).changeUrgencyScore(value);
-                });
-              },
+              Consumer(
+                builder: (context, ref, child) {
+                  final sliderVal = ref.watch(
+                    addTaskScreenSateProvider.select(
+                      (screenStatus) => screenStatus.urgencyScore,
+                    ),
+                  );
+                  return Slider(
+                    value: sliderVal,
+                    onChanged: (value) {
+                      ref
+                          .read(addTaskScreenSateProvider.notifier)
+                          .changeUrgencyScore(value);
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+          SizedBox(height: 25.r),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Task Location",
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13.r),
+              ),
+              SizedBox(height: 10.r),
+              Consumer(
+                builder: (context, ref, child) {
 
-              )
+                  return GestureDetector(
+                    onTap: ()  {
+                      ref.read(addTaskScreenSateProvider.notifier).updateTaskLocation(ref.read(locationControllerProvider).currentPos);
+                      Navigator.push(context, MaterialPageRoute(builder: (_) {
+
+                        return LocationPickerView();
+                      }));
+                    },
+                    child: Container(
+                      height: 50.r,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.r),
+                        color: const Color(0xffE1E5E0),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(15.r),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Consumer(
+                              builder: (context, ref, child) {
+                                final taskLocation = ref.watch(addTaskScreenSateProvider.select((screenStatus) => screenStatus.taskLocation));
+                                return taskLocation.latitude == 0? Text("Select Location") : Text("Location Selected");
+                              },
+                            ),
+                            Image(
+                              height: 25.r.r,
+                              width: 25.r,
+                              image: const AssetImage(
+                                "assets/images/calendar_icon.png",
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
           SizedBox(height: 25.r),
@@ -358,7 +423,8 @@ SliverToBoxAdapter basicTaskFeatureForm(
                             )
                             .toList();
                     final dueDate = ref.read(addTaskScreenSateProvider).dueDate;
-                    final currUrgencyScore = ref.read(addTaskScreenSateProvider).urgencyScore;
+                    final currUrgencyScore =
+                        ref.read(addTaskScreenSateProvider).urgencyScore;
 
                     final myNewTask = TaskModel(
                       title: taskTitleController.text,
@@ -371,29 +437,35 @@ SliverToBoxAdapter basicTaskFeatureForm(
                         month: dueDate.month,
                         day: dueDate.month,
                       ),
-                      urgencyScore: currUrgencyScore
+                      urgencyScore: currUrgencyScore,
                     );
 
                     await ref
                         .read(taskControllerProvider.notifier)
                         .addNewTask(myNewTask);
 
+                    ref.read(addTaskScreenSateProvider.notifier).reset();
+
                     Navigator.pop(context);
                   },
-                  child:  Consumer(
-                    builder: (context, ref, child)
-                    {
-                      final taskStatus = ref.watch(taskControllerProvider.select((myTask) => myTask.loading));
-
-                      return taskStatus ? CircularProgressIndicator() : Text(
-                        "Submit",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      final taskStatus = ref.watch(
+                        taskControllerProvider.select(
+                          (myTask) => myTask.loading,
                         ),
                       );
-                    }
 
+                      return taskStatus
+                          ? CircularProgressIndicator()
+                          : Text(
+                            "Submit",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          );
+                    },
                   ),
                 ),
               ),

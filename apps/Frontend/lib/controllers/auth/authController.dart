@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:nexus_frontend/models/userModel.dart';
 import 'package:nexus_frontend/repository/authRepository.dart';
 
-enum AuthStatus { unknown, authenticated, unauthenticated, loading }
+enum AuthStatus { unknown, authenticated, unauthenticated, loading, notRegistered }
 
 class AuthController extends StateNotifier<UserState> {
   final AuthRepository authRepository;
@@ -66,6 +66,16 @@ class AuthController extends StateNotifier<UserState> {
   Future<void> logout() async {
     state = state.copyWith(AuthStatus.loading, null);
     await authRepository.logout();
+    state = state.copyWith(AuthStatus.unauthenticated, null);
+  }
+
+  void goToRegisterScreen()
+  {
+    state = state.copyWith(AuthStatus.notRegistered, null);
+  }
+
+  void goToLoginScreen()
+  {
     state = state.copyWith(AuthStatus.unauthenticated, null);
   }
 }

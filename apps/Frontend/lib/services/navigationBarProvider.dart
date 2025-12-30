@@ -12,6 +12,11 @@ class NavigationController extends StateNotifier<int>{
     state = screenIndex;
   }
 
+  void reset()
+  {
+    state = 0;
+  }
+
 
 }
 

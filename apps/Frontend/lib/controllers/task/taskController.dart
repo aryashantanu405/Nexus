@@ -1,5 +1,6 @@
 
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:nexus_frontend/models/taskModel.dart';
 import 'package:nexus_frontend/repository/taskRepository.dart';
 
@@ -7,14 +8,18 @@ class TaskController extends StateNotifier<TaskScreenStatus> {
   TaskRepository taskRepository;
 
   TaskController(this.taskRepository)
-    : super( TaskScreenStatus(selectedCategory: "all", taskList: [], currentCategoryTasks: [], allTaskCategories: [], loading: false));
+    : super( TaskScreenStatus(selectedCategory: "all", taskList: [], currentCategoryTasks: [], allTaskCategories: [], loading: false, ));
 
   Future<void> getAllTasks() async {
     state = state.copyWith(null, null, null, null, true);
     try{
       final List<TaskModel>? tasks = await taskRepository.getAllTasks();
 
-      print(tasks?[0].category);
+      if(tasks == null || tasks.length == 0)
+        {
+          state = state.copyWith(null, null, null, null, false);
+          return;
+        }
 
       final safeTasks = tasks ?? [];
 
@@ -58,6 +63,8 @@ class TaskController extends StateNotifier<TaskScreenStatus> {
 
    state = state.copyWith(null, null, tasks, null, null);
   }
+
+
 }
 
 class TaskScreenStatus {
@@ -89,7 +96,8 @@ class TaskScreenStatus {
       taskList: taskList ?? this.taskList,
       currentCategoryTasks: currentCategoryTasks ?? this.currentCategoryTasks,
       allTaskCategories: allTaskCategories ?? this.allTaskCategories,
-      loading: loading ?? this.loading
+      loading: loading ?? this.loading,
+
     );
   }
 }
