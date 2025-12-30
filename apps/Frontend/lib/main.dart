@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nexus_frontend/controllers/auth/authController.dart';
 import 'package:nexus_frontend/controllers/location/locationController.dart';
-import 'package:nexus_frontend/repository/androidTrackingService.dart';
 import 'package:nexus_frontend/views/auth/loginView.dart';
 import 'package:nexus_frontend/views/auth/registerView.dart';
 import 'package:nexus_frontend/views/mainScreen.dart';

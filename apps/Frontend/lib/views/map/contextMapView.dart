@@ -1,9 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:nexus_frontend/widgets/sliverAppBar.dart';
 
-class ContextMapView extends StatelessWidget {
+class ContextMapView extends StatefulWidget {
   const ContextMapView({super.key});
+
+  @override
+  State<ContextMapView> createState() => _ContextMapViewState();
+}
+
+class _ContextMapViewState extends State<ContextMapView> {
+  GoogleMapController? _mapController;
+
+  LatLng _currentLocation = const LatLng(25.6200, 85.1720); // fallback
+  bool _permissionGranted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _requestLocationPermission();
+  }
+
+  /// ---------------- LOCATION PERMISSION ----------------
+  Future<void> _requestLocationPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      debugPrint("Location permission permanently denied");
+      return;
+    }
+
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      _permissionGranted = true;
+      _getCurrentLocation();
+    }
+  }
+
+  /// ---------------- GET CURRENT LOCATION ----------------
+  Future<void> _getCurrentLocation() async {
+    final position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    setState(() {
+      _currentLocation = LatLng(position.latitude, position.longitude);
+    });
+
+    _mapController?.animateCamera(
+      CameraUpdate.newLatLngZoom(_currentLocation, 16),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +64,6 @@ class ContextMapView extends StatelessWidget {
       backgroundColor: const Color(0xfff6f7fb),
       body: CustomScrollView(
         slivers: [
-          /// ✅ SAME APP BAR AS ADD TASK & FOCUS
           myAppBar(
             "Context Map",
             "Location-based Reminders",
@@ -37,31 +89,50 @@ class ContextMapView extends StatelessWidget {
     );
   }
 
+  /// ---------------- MAP CARD ----------------
   Widget _mapCard() {
     return Container(
       height: 180.r,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        gradient: const LinearGradient(
-          colors: [Color(0xffd4fcf7), Color(0xfffcd6e0)],
-        ),
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: 6),
+        ],
       ),
-      child: const Center(
-        child: Text(
-          "Google Maps Integration",
-          style: TextStyle(fontWeight: FontWeight.w500),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: GoogleMap(
+          initialCameraPosition: CameraPosition(
+            target: _currentLocation,
+            zoom: 15,
+          ),
+          myLocationEnabled: _permissionGranted,
+          myLocationButtonEnabled: false,
+          zoomControlsEnabled: false,
+          onMapCreated: (controller) {
+            _mapController = controller;
+          },
+          markers: {
+            Marker(
+              markerId: const MarkerId("current"),
+              position: _currentLocation,
+              infoWindow: const InfoWindow(title: "Your Location"),
+            ),
+          },
         ),
       ),
     );
   }
 
+  /// ---------------- LOCATION CARD ----------------
   Widget _locationCard() {
     return _gradientCard(
       title: "📍 Current Location",
-      subtitle: "NIT Patna Campus\n🌤 28°C · Cloudy",
+      subtitle: "Live GPS Location\n🌤 28°C · Cloudy",
     );
   }
 
+  /// ---------------- NEARBY TASKS ----------------
   Widget _nearbyTasks() {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -96,6 +167,7 @@ class ContextMapView extends StatelessWidget {
     );
   }
 
+  /// ---------------- GRADIENT CARD ----------------
   Widget _gradientCard({
     required String title,
     required String subtitle,
@@ -120,6 +192,7 @@ class ContextMapView extends StatelessWidget {
               fontSize: 18,
             ),
           ),
+          const SizedBox(height: 4),
           Text(
             subtitle,
             style: const TextStyle(color: Colors.white70),
