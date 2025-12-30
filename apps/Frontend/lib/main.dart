@@ -12,9 +12,9 @@ import 'package:nexus_frontend/views/others/splashView.dart';
 
 import 'controllers/task/taskController.dart';
 
+final rootScffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
-
-void main() async{
+void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
   // final service = FlutterBackgroundService();
   //
@@ -36,19 +36,34 @@ class MyApp extends ConsumerWidget {
 
     // Listen is only for side-effects; Riverpod 3.x allows this inside build()
     ref.listen<UserState>(authControllerProvider, (previous, next) {
-      debugPrint('LISTEN: auth changed from ${previous?.authStatus} -> ${next.authStatus}');
+      debugPrint(
+        'LISTEN: auth changed from ${previous?.authStatus} -> ${next.authStatus}',
+      );
 
       // LOGIN: start tasks and start background service (async safely)
       if (previous?.authStatus != AuthStatus.authenticated &&
           next.authStatus == AuthStatus.authenticated) {
-        debugPrint('LISTEN: detected login -> fetching tasks and starting tracking service');
+        debugPrint(
+          'LISTEN: detected login -> fetching tasks and starting tracking service',
+        );
         ref.read(taskControllerProvider.notifier).getAllTasks();
         ref.read(locationControllerProvider.notifier).getCurrentLocation();
+        String loginMessage = "Login Successful";
+        String registerMessage = "Register Successful";
+        rootScffoldMessengerKey.currentState?.showSnackBar(
+          SnackBar(
+            content: Text(
+              previous?.authStatus == AuthStatus.notRegistered
+                  ? registerMessage
+                  : loginMessage,
+            ),
+          ),
+        );
 
         // Use microtask to avoid awaiting inside listener
         Future.microtask(() async {
           try {
-           // await FlutterBackgroundService().startService();
+            // await FlutterBackgroundService().startService();
             //debugPrint('Background service start requested');
           } catch (e) {
             //debugPrint('Failed to start background service: $e');
@@ -71,23 +86,17 @@ class MyApp extends ConsumerWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
+          scaffoldMessengerKey: rootScffoldMessengerKey,
           debugShowCheckedModeBanner: false,
-          home: switch(authState.authStatus)
-              {
-                AuthStatus.loading => const SplashView(),
-                AuthStatus.authenticated => const MainScreen(),
-          AuthStatus.unauthenticated => const LoginView(),
-          AuthStatus.unknown => const LoginView(),
-          AuthStatus.notRegistered => const RegisterView()
-          }
+          home: switch (authState.authStatus) {
+            AuthStatus.loading => const SplashView(),
+            AuthStatus.authenticated => const MainScreen(),
+            AuthStatus.unauthenticated => const LoginView(),
+            AuthStatus.unknown => const LoginView(),
+            AuthStatus.notRegistered => const RegisterView(),
+          },
         );
       },
     );
   }
 }
-
-
-
-
-
-
