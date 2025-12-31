@@ -7,7 +7,15 @@ class SplashView extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: CircularProgressIndicator(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Loading...", style: TextStyle(fontSize: 15),),
+            SizedBox(
+
+                child: CircularProgressIndicator()),
+          ],
+        ),
       ),
     );
   }

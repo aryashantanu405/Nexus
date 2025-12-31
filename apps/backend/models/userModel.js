@@ -26,7 +26,7 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
+      required: [true, "Password is required"]
       // Note: You must hash this password before saving!
     },
     phoneNumber: {

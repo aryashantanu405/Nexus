@@ -3,6 +3,9 @@ import dotenv from "dotenv"
 dotenv.config()
 let isConnected = false
 
+
+
+
 export const dbConnect = async () => {
   if (isConnected) {
     console.log('Connection already established')
