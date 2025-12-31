@@ -4,10 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nexus_frontend/controllers/auth/authController.dart';
 import 'package:nexus_frontend/services/navigationBarProvider.dart';
 import 'package:nexus_frontend/views/analytics/analyticsView.dart';
+import 'package:nexus_frontend/views/focus/focusView.dart';
 
 import 'package:nexus_frontend/views/home/homeView.dart';
 import 'package:nexus_frontend/views/map/contextMapView.dart';
 import 'package:nexus_frontend/views/memory/memoryView.dart';
+import 'package:nexus_frontend/views/others/notificationView.dart';
 import 'package:nexus_frontend/views/profile/profileView.dart';
 
 import 'package:nexus_frontend/views/tasks/taskView.dart';
@@ -22,7 +24,7 @@ class MainScreen extends ConsumerStatefulWidget {
 
 class _MainScreenState extends ConsumerState<MainScreen> {
 
-  final List<Widget> _screens = [HomeView(), TaskView(), ContextMapView(), ProfileView()];
+  final List<Widget> _screens = [HomeView(), TaskView(), AnalyticsView(), ProfileView()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
