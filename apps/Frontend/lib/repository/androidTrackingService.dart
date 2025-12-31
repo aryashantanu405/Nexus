@@ -23,11 +23,15 @@ void androidTrackingService(ServiceInstance service) async {
 
   locationRepo.positionStream().listen((position) async {
     if (!position.latitude.isFinite ||
-        !position.longitude.isFinite) return;
+        !position.longitude.isFinite) {
+      return;
+    }
 
     final now = DateTime.now();
     if (lastSent != null &&
-        now.difference(lastSent!).inMinutes < 5) return;
+        now.difference(lastSent!).inMinutes < 5) {
+      return;
+    }
 
     lastSent = now;
 

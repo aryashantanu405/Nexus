@@ -3,8 +3,11 @@ class FocusModel {
   final Duration remaining;
   final bool isRunning;
   final bool isPaused;
+
   final int sessionsCompleted;
-  final int pauses;
+  final int totalFocusMinutes;
+  final int manualPauses;
+
   final double productivity;
   final String subject;
 
@@ -14,7 +17,8 @@ class FocusModel {
     required this.isRunning,
     required this.isPaused,
     required this.sessionsCompleted,
-    required this.pauses,
+    required this.totalFocusMinutes,
+    required this.manualPauses,
     required this.productivity,
     required this.subject,
   });
@@ -25,7 +29,8 @@ class FocusModel {
     bool? isRunning,
     bool? isPaused,
     int? sessionsCompleted,
-    int? pauses,
+    int? totalFocusMinutes,
+    int? manualPauses,
     double? productivity,
     String? subject,
   }) {
@@ -35,7 +40,9 @@ class FocusModel {
       isRunning: isRunning ?? this.isRunning,
       isPaused: isPaused ?? this.isPaused,
       sessionsCompleted: sessionsCompleted ?? this.sessionsCompleted,
-      pauses: pauses ?? this.pauses,
+      totalFocusMinutes:
+          totalFocusMinutes ?? this.totalFocusMinutes,
+      manualPauses: manualPauses ?? this.manualPauses,
       productivity: productivity ?? this.productivity,
       subject: subject ?? this.subject,
     );

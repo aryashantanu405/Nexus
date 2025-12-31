@@ -15,7 +15,6 @@ class ContextMapView extends ConsumerWidget {
       backgroundColor: const Color(0xfff6f7fb),
       body: CustomScrollView(
         slivers: [
-          /// ✅ SAME APP BAR AS ADD TASK & FOCUS
           myAppBar(
             "Context Map",
             "Location-based Reminders",
@@ -47,21 +46,23 @@ class ContextMapView extends ConsumerWidget {
       height: 400.r,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        gradient: const LinearGradient(
-          colors: [Color(0xffd4fcf7), Color(0xfffcd6e0)],
-        ),
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: 6),
+        ],
       ),
       child: Center(child: locationPickingWidget2(ref)),
     );
   }
 
+  /// ---------------- LOCATION CARD ----------------
   Widget _locationCard() {
     return _gradientCard(
       title: "📍 Current Location",
-      subtitle: "NIT Patna Campus\n🌤 28°C · Cloudy",
+      subtitle: "Live GPS Location\n🌤 28°C · Cloudy",
     );
   }
 
+  /// ---------------- NEARBY TASKS ----------------
   Widget _nearbyTasks() {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -96,6 +97,7 @@ class ContextMapView extends ConsumerWidget {
     );
   }
 
+  /// ---------------- GRADIENT CARD ----------------
   Widget _gradientCard({
     required String title,
     required String subtitle,
@@ -120,6 +122,7 @@ class ContextMapView extends ConsumerWidget {
               fontSize: 18,
             ),
           ),
+          const SizedBox(height: 4),
           Text(
             subtitle,
             style: const TextStyle(color: Colors.white70),
