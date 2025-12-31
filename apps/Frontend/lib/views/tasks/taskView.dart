@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nexus_frontend/controllers/task/taskController.dart';
+import 'package:nexus_frontend/services/providers/radioButtonProvider.dart';
 import 'package:nexus_frontend/views/tasks/addTask.dart';
+import 'package:nexus_frontend/widgets/gradientButton.dart';
 import 'package:nexus_frontend/widgets/navigationBar.dart';
 import 'package:nexus_frontend/widgets/sliverAppBar.dart';
 import 'package:nexus_frontend/widgets/taskCard.dart';
@@ -51,6 +53,7 @@ class _TaskViewState extends ConsumerState<TaskView> {
                         return TaskCard(
                           taskListProvider.currentCategoryTasks[index],
                           context,
+                          ref
                         );
                       },
                     ),
@@ -61,7 +64,12 @@ class _TaskViewState extends ConsumerState<TaskView> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: Consumer(builder: (context, ref, child) {
+        final showUpdate = ref.watch(addTaskScreenSateProvider.select((screenStaus) => screenStaus.showUpdateButton));
+        return showUpdate ? SizedBox(
+          height: 50.r,
+            width: 150.r,
+            child: GradientButton(onPressed: (){}, child: Text("Update Tasks", style: TextStyle(color: Colors.white),))) : FloatingActionButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (_) {
@@ -82,7 +90,7 @@ class _TaskViewState extends ConsumerState<TaskView> {
 
           child: const Icon(Icons.add, color: Colors.white),
         ),
-      ),
+      );}) 
     );
   }
 }

@@ -41,16 +41,21 @@ class AuthRepository {
     }
   }
 
-  Future<void> registerUser(UserModel user) async {
+  Future<bool> registerUser(UserModel user) async {
     try {
       final response = await dio.post("/auth/register", data: user.toJson());
+
+      if(response.statusCode != 201)
+        {
+          return false;
+        }
       await tokenStorage.saveAccessToken(response.data["tokens"]["accessToken"]);
       await tokenStorage.saveRefreshToken(response.data["tokens"]["refreshToken"]);
 
-
+      return true;
     } on DioException catch (e) {
       print(e.response?.data ?? e.message);
-
+      return false;
     }
   }
 

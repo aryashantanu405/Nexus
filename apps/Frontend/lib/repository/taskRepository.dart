@@ -19,15 +19,14 @@ class TaskRepository{
       final data = response.data;
 
 
+
+
       if(response.statusCode == 200)
         {
           print("Success");
         }
 
       final allTasks = data["data"]["tasks"];
-
-
-
 
 
 
@@ -46,6 +45,7 @@ class TaskRepository{
     try{
       final response = await dio.post("/tasks/createtask", data: newTask.toJson());
 
+      print(newTask.dueDate?.year);
       if(response.statusCode == 201)
         {
           print("Success");
@@ -58,8 +58,28 @@ class TaskRepository{
     }
         on DioException catch(err)
     {
-      print(err.response?.data);
+
+      print(err.response);
       return;
+    }
+  }
+
+  Future<bool> markTasksComplete(List<String> taskIds) async{
+    try{
+      final response = await dio.post("/tasks/completetask", data: taskIds);
+
+      if(response.statusCode == 200)
+        {
+          print("Success");
+          return true;
+        }
+
+      return false;
+    }
+        on DioException catch(err)
+    {
+      print(err.response);
+      return false;
     }
   }
 }

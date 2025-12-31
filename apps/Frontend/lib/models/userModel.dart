@@ -7,7 +7,7 @@ class UserModel{
   final String? password;
   final String? id;
 
-  UserModel({required this.name, required this.email, required this.username, required this.password, this.id});
+  UserModel({required this.name, required this.email, required this.username,  this.password, this.id});
 
 
   Map<String, dynamic> toJson()

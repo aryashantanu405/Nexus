@@ -426,17 +426,15 @@ SliverToBoxAdapter basicTaskFeatureForm(
                     final currUrgencyScore =
                         ref.read(addTaskScreenSateProvider).urgencyScore;
 
+
+
                     final myNewTask = TaskModel(
                       title: taskTitleController.text,
                       description: taskDescriptionController.text,
                       category: taskCategoryController.text,
                       priority: taskPriority,
                       subtasks: taskSubtasks,
-                      dueDate: DateModel(
-                        year: dueDate.year,
-                        month: dueDate.month,
-                        day: dueDate.month,
-                      ),
+                      dueDate: dueDate,
                       urgencyScore: currUrgencyScore,
                     );
 
@@ -452,7 +450,7 @@ SliverToBoxAdapter basicTaskFeatureForm(
                     builder: (context, ref, child) {
                       final taskStatus = ref.watch(
                         taskControllerProvider.select(
-                          (myTask) => myTask.loading,
+                          (myTask) => myTask.submitting,
                         ),
                       );
 

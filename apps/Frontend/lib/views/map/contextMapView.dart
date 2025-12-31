@@ -1,69 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:nexus_frontend/controllers/location/locationController.dart';
+import 'package:nexus_frontend/views/map/locationPickerView.dart';
 import 'package:nexus_frontend/widgets/sliverAppBar.dart';
 
-class ContextMapView extends StatefulWidget {
+class ContextMapView extends ConsumerWidget {
   const ContextMapView({super.key});
 
   @override
-  State<ContextMapView> createState() => _ContextMapViewState();
-}
-
-class _ContextMapViewState extends State<ContextMapView> {
-  GoogleMapController? _mapController;
-
-  LatLng _currentLocation = const LatLng(25.6200, 85.1720); // fallback
-  bool _permissionGranted = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _requestLocationPermission();
-  }
-
-  /// ---------------- LOCATION PERMISSION ----------------
-  Future<void> _requestLocationPermission() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      debugPrint("Location permission permanently denied");
-      return;
-    }
-
-    if (permission == LocationPermission.whileInUse ||
-        permission == LocationPermission.always) {
-      _permissionGranted = true;
-      _getCurrentLocation();
-    }
-  }
-
-  /// ---------------- GET CURRENT LOCATION ----------------
-  Future<void> _getCurrentLocation() async {
-    final position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-
-    setState(() {
-      _currentLocation = LatLng(position.latitude, position.longitude);
-    });
-
-    _mapController?.animateCamera(
-      CameraUpdate.newLatLngZoom(_currentLocation, 16),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: const Color(0xfff6f7fb),
       body: CustomScrollView(
         slivers: [
+          /// ✅ SAME APP BAR AS ADD TASK & FOCUS
           myAppBar(
             "Context Map",
             "Location-based Reminders",
@@ -74,8 +26,9 @@ class _ContextMapViewState extends State<ContextMapView> {
             child: Padding(
               padding: EdgeInsets.all(16.r),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  _mapCard(),
+                  Flexible(child: _mapCard(ref)),
                   SizedBox(height: 16.r),
                   _locationCard(),
                   SizedBox(height: 16.r),
@@ -89,50 +42,26 @@ class _ContextMapViewState extends State<ContextMapView> {
     );
   }
 
-  /// ---------------- MAP CARD ----------------
-  Widget _mapCard() {
+  Widget _mapCard(WidgetRef ref) {
     return Container(
-      height: 180.r,
+      height: 400.r,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 6),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: GoogleMap(
-          initialCameraPosition: CameraPosition(
-            target: _currentLocation,
-            zoom: 15,
-          ),
-          myLocationEnabled: _permissionGranted,
-          myLocationButtonEnabled: false,
-          zoomControlsEnabled: false,
-          onMapCreated: (controller) {
-            _mapController = controller;
-          },
-          markers: {
-            Marker(
-              markerId: const MarkerId("current"),
-              position: _currentLocation,
-              infoWindow: const InfoWindow(title: "Your Location"),
-            ),
-          },
+        gradient: const LinearGradient(
+          colors: [Color(0xffd4fcf7), Color(0xfffcd6e0)],
         ),
       ),
+      child: Center(child: locationPickingWidget2(ref)),
     );
   }
 
-  /// ---------------- LOCATION CARD ----------------
   Widget _locationCard() {
     return _gradientCard(
       title: "📍 Current Location",
-      subtitle: "Live GPS Location\n🌤 28°C · Cloudy",
+      subtitle: "NIT Patna Campus\n🌤 28°C · Cloudy",
     );
   }
 
-  /// ---------------- NEARBY TASKS ----------------
   Widget _nearbyTasks() {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -167,7 +96,6 @@ class _ContextMapViewState extends State<ContextMapView> {
     );
   }
 
-  /// ---------------- GRADIENT CARD ----------------
   Widget _gradientCard({
     required String title,
     required String subtitle,
@@ -192,7 +120,6 @@ class _ContextMapViewState extends State<ContextMapView> {
               fontSize: 18,
             ),
           ),
-          const SizedBox(height: 4),
           Text(
             subtitle,
             style: const TextStyle(color: Colors.white70),
@@ -201,4 +128,42 @@ class _ContextMapViewState extends State<ContextMapView> {
       ),
     );
   }
+}
+
+
+Consumer locationPickingWidget2(WidgetRef ref)
+{
+  return Consumer( builder: (context, ref, child) {
+    final pickedLocation = ref.watch(locationControllerProvider.select((screenStatus) => screenStatus.currentPos));
+
+    if(pickedLocation.latitude.isNaN || pickedLocation.longitude.isNaN)
+    {
+      return SizedBox(
+        height: 4.h,
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    return Stack(
+      children: [
+        FlutterMap(options: MapOptions(
+            initialCenter: pickedLocation, initialZoom: 2, onTap: (_, point) {
+        }), children: [
+          TileLayer(
+            urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            userAgentPackageName: "com.example.nexus_frontend",
+          ),
+
+          MarkerLayer(markers: [
+            Marker(point: pickedLocation, child: const Icon(Icons.location_pin), height: 40, width: 40)
+          ])
+        ]),
+        Positioned(bottom: 20.r, left: 20.r, right: 20.r, child: ElevatedButton(onPressed: (){
+          Navigator.pop(context);
+        }, child: Text("Confirm Location")))
+      ],
+    );
+  },
+
+  );
 }

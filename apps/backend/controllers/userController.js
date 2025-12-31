@@ -24,6 +24,11 @@ export const updateUserProfile = async (req, res) => {
   try {
     const updates = req.body;
 
+    if(!updates.password)
+    {
+      delete updates.password;
+    }
+
     const user = await UserModel.findByIdAndUpdate(req.user._id, updates, {
       new: true,
       runValidators: true,

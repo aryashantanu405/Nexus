@@ -121,7 +121,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
           ),
         ),
         onPressed: () async{
-          UserModel updatedUser = UserModel(name: nameController.value.text, email: emailController.value.text, username: usernameController.value.text, password: " ");
+          UserModel updatedUser = UserModel(name: nameController.value.text, email: emailController.value.text, username: usernameController.value.text);
           await ref.read(authControllerProvider.notifier).updateUser(updatedUser);
           myUser = ref.read(authControllerProvider).currentUser;
           nameController.text = myUser?.name?? "Guest";

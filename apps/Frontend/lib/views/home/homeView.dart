@@ -79,6 +79,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                               TaskCard(
                                 allTasks.currentCategoryTasks[index],
                                 context,
+                                ref
                               ),
                               SizedBox(height: 5.r),
                             ],

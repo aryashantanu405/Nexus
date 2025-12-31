@@ -20,7 +20,10 @@ export const createTask = async (req, res) => {
     subtasks,
   } = req.body;
 
-  dueDate = Date(dueDate);
+  const parsedDate = dueDate ? new Date(dueDate) : null;
+
+  console.log(parsedDate);
+  
 
   const userId = req.user.id;
 
@@ -59,7 +62,7 @@ export const createTask = async (req, res) => {
       title,
       description,
       priority,
-      dueDate,
+      dueDate: parsedDate,
       estimatedDuration,
       category,
       tags,
@@ -166,7 +169,7 @@ export const getAllUserTasks = async (req, res) => {
 /**
  * GET TASK BY ID
  */
-export const getTaskById = async (req, res) => {
+export const getTaskById = async (req, res) => { 
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({
       success: false,

@@ -1,6 +1,5 @@
 
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:nexus_frontend/models/taskModel.dart';
 import 'package:nexus_frontend/repository/taskRepository.dart';
 
@@ -8,16 +7,15 @@ class TaskController extends StateNotifier<TaskScreenStatus> {
   TaskRepository taskRepository;
 
   TaskController(this.taskRepository)
-    : super( TaskScreenStatus(selectedCategory: "all", taskList: [], currentCategoryTasks: [], allTaskCategories: [], loading: false, ));
+    : super( TaskScreenStatus(selectedCategory: "all", taskList: [], currentCategoryTasks: [], allTaskCategories: [], loading: false, submitting: false));
 
   Future<void> getAllTasks() async {
-    state = state.copyWith(null, null, null, null, true);
+    state = state.copyWith(null, null, null, null, true, null);
     try{
       final List<TaskModel>? tasks = await taskRepository.getAllTasks();
-
-      if(tasks == null || tasks.length == 0)
+      if(tasks == null || tasks.isEmpty)
         {
-          state = state.copyWith(null, null, null, null, false);
+          state = state.copyWith(null, null, null, null, false, null);
           return;
         }
 
@@ -34,7 +32,7 @@ class TaskController extends StateNotifier<TaskScreenStatus> {
         }
 
       final allCategories = ["All", ...distinct];
-      state = state.copyWith("all", safeTasks, safeTasks, allCategories, false);
+      state = state.copyWith("all", safeTasks, safeTasks, allCategories, false, null);
     }
         catch(err)
     {
@@ -45,14 +43,14 @@ class TaskController extends StateNotifier<TaskScreenStatus> {
 
   Future<void> addNewTask(TaskModel newTask) async
   {
-    state = state.copyWith(null, null, null, null, true);
+    state = state.copyWith(null, null, null, null, true, true);
     await taskRepository.addNewTask(newTask);
     await getAllTasks();
-    state = state.copyWith(null, null, null, null, false);
+    state = state.copyWith(null, null, null, null, false, false);
   }
 
   void categoryTasks(String category) {
-    state = state.copyWith(category.toLowerCase(), null, null, null, null);
+    state = state.copyWith(category.toLowerCase(), null, null, null, null, null);
     List<TaskModel> tasks = [];
 
     for (TaskModel task in state.taskList) {
@@ -61,7 +59,21 @@ class TaskController extends StateNotifier<TaskScreenStatus> {
       }
     }
 
-   state = state.copyWith(null, null, tasks, null, null);
+   state = state.copyWith(null, null, tasks, null, null, null);
+  }
+
+  Future<void> markTasksComplete(List<String> taskIds) async
+  {
+    state = state.copyWith(null, null, null, null, true, null);
+    final updated = await taskRepository.markTasksComplete(taskIds);
+
+    if(!updated)
+      {
+        state = state.copyWith(null, null, null, null, false, null);
+        return;
+      }
+
+    await getAllTasks();
   }
 
 
@@ -73,6 +85,7 @@ class TaskScreenStatus {
   final List<TaskModel> currentCategoryTasks;
   final List<String> allTaskCategories;
   final bool loading;
+  final bool submitting;
 
 
 
@@ -81,7 +94,8 @@ class TaskScreenStatus {
     required this.taskList,
     required this.currentCategoryTasks,
     required this.allTaskCategories,
-    required this.loading
+    required this.loading,
+    required this.submitting
   });
 
   TaskScreenStatus copyWith(
@@ -89,7 +103,8 @@ class TaskScreenStatus {
     List<TaskModel>? taskList,
       List<TaskModel>? currentCategoryTasks,
       List<String>? allTaskCategories,
-      bool? loading
+      bool? loading,
+      bool? submitting
   ) {
     return TaskScreenStatus(
       selectedCategory: selectedCategory ?? this.selectedCategory,
@@ -97,7 +112,7 @@ class TaskScreenStatus {
       currentCategoryTasks: currentCategoryTasks ?? this.currentCategoryTasks,
       allTaskCategories: allTaskCategories ?? this.allTaskCategories,
       loading: loading ?? this.loading,
-
+      submitting: submitting ?? this.submitting
     );
   }
 }

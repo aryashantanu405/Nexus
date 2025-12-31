@@ -57,7 +57,12 @@ class AuthController extends StateNotifier<UserState> {
 
   Future<void> registerUser(UserModel user) async{
     state = state.copyWith(AuthStatus.loading, null);
-    await authRepository.registerUser(user);
+    final registered = await authRepository.registerUser(user);
+    if(!registered)
+      {
+        state = state.copyWith(AuthStatus.notRegistered, null);
+        return;
+      }
     final myUser = await authRepository.getCurrentUser();
     state = state.copyWith(AuthStatus.authenticated, myUser);
   }
