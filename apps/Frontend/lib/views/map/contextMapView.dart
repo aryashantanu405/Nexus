@@ -30,7 +30,10 @@ class ContextMapView extends ConsumerWidget {
                 children: [
                   Flexible(child: _mapCard(ref)),
                   SizedBox(height: 16.r),
-                  _locationCard(),
+                  Consumer(builder: (context, ref, child) {
+                    final placeName = ref.watch(locationControllerProvider.select((screenStatus) => screenStatus.currentPlace.placeName));
+                    return _locationCard(placeName);
+                  },),
                   SizedBox(height: 16.r),
                   _nearbyTasks(),
                 ],
@@ -55,10 +58,10 @@ class ContextMapView extends ConsumerWidget {
     );
   }
 
-  Widget _locationCard() {
+  Widget _locationCard(String? subtitle) {
     return _gradientCard(
       title: "📍 Current Location",
-      subtitle: "NIT Patna Campus\n🌤 28°C · Cloudy",
+      subtitle: subtitle ??  "Unknown",
     );
   }
 
