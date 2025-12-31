@@ -4,17 +4,18 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:nexus_frontend/models/userModel.dart';
 import 'package:nexus_frontend/repository/authRepository.dart';
 
-enum AuthStatus { unknown, authenticated, unauthenticated, loading, notRegistered }
+enum AuthStatus { unknown, authenticated, unauthenticated, loading, notRegistered, starting }
 
 class AuthController extends StateNotifier<UserState> {
   final AuthRepository authRepository;
 
-  AuthController(this.authRepository) : super(UserState(authStatus: AuthStatus.unknown, currentUser: null)) {
+  AuthController(this.authRepository) : super(UserState(authStatus: AuthStatus.starting, currentUser: null)) {
     _checkAuth();
   }
 
   Future<void> _checkAuth() async {
-    state = state.copyWith(AuthStatus.loading, null);
+    await Future.delayed(Duration(seconds: 3));
+    state = state.copyWith(AuthStatus.unauthenticated, null);
     final loggedIn = await authRepository.isLoggedIn();
 
     if(loggedIn)

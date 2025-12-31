@@ -7,6 +7,7 @@ import 'package:nexus_frontend/controllers/location/locationController.dart';
 import 'package:nexus_frontend/views/auth/loginView.dart';
 import 'package:nexus_frontend/views/auth/registerView.dart';
 import 'package:nexus_frontend/views/mainScreen.dart';
+import 'package:nexus_frontend/views/others/loadingView.dart';
 import 'package:nexus_frontend/views/others/splashView.dart';
 
 import 'controllers/task/taskController.dart';
@@ -24,11 +25,24 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+
+  }
+  @override
+  Widget build(BuildContext context) {
     final authState = ref.watch(authControllerProvider);
 
     debugPrint('BUILD: authStatus = ${authState.authStatus}');
@@ -89,6 +103,7 @@ class MyApp extends ConsumerWidget {
           debugShowCheckedModeBanner: false,
           home: switch (authState.authStatus) {
             AuthStatus.loading => const SplashView(),
+          AuthStatus.starting => const LoadingView(),
             AuthStatus.authenticated => const MainScreen(),
             AuthStatus.unauthenticated => const LoginView(),
             AuthStatus.unknown => const LoginView(),
@@ -99,3 +114,13 @@ class MyApp extends ConsumerWidget {
     );
   }
 }
+
+
+// class MyApp extends StatefulConsumerWidget {
+//   const MyApp({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//
+//   }
+// }
