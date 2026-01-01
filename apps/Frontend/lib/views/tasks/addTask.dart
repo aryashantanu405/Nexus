@@ -4,11 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:nexus_frontend/controllers/location/locationController.dart';
 import 'package:nexus_frontend/controllers/task/taskController.dart';
-import 'package:nexus_frontend/models/dateModel.dart';
+import 'package:nexus_frontend/models/locationModel.dart';
 import 'package:nexus_frontend/models/subtaskModel.dart';
 import 'package:nexus_frontend/models/taskModel.dart';
 import 'package:nexus_frontend/services/providers/radioButtonProvider.dart';
-import 'package:nexus_frontend/views/auth/loginView.dart';
 import 'package:nexus_frontend/views/map/locationPickerView.dart';
 import 'package:nexus_frontend/widgets/gradientButton.dart';
 import 'package:nexus_frontend/widgets/sliverAppBar.dart';
@@ -426,6 +425,9 @@ SliverToBoxAdapter basicTaskFeatureForm(
                     final currUrgencyScore =
                         ref.read(addTaskScreenSateProvider).urgencyScore;
 
+                    final currLocation = ref.read(addTaskScreenSateProvider).taskLocation;
+
+
 
 
                     final myNewTask = TaskModel(
@@ -436,6 +438,7 @@ SliverToBoxAdapter basicTaskFeatureForm(
                       subtasks: taskSubtasks,
                       dueDate: dueDate,
                       urgencyScore: currUrgencyScore,
+                      taskLocation: LocationModel(position: currLocation, lat: currLocation.latitude, lng: currLocation.longitude),
                     );
 
                     await ref

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:nexus_frontend/controllers/auth/authController.dart';
+import 'package:nexus_frontend/controllers/location/locationController.dart';
+import 'package:nexus_frontend/controllers/map/contextMapController.dart';
 import 'package:nexus_frontend/controllers/task/taskController.dart';
 import 'package:nexus_frontend/controllers/user/userController.dart';
 import 'package:nexus_frontend/utils/homeScreenOutlineButton.dart';
@@ -129,6 +131,7 @@ Row(
       "assets/images/loginIcon.png",
       "View Map",
       () {
+        ref.read(contextMapScreenControllerProvider.notifier).viewTasksBasedOnLocation(ref.read(locationControllerProvider).currentPos, ref.read(taskControllerProvider).taskList);
         Navigator.push(
           context,
           MaterialPageRoute(
