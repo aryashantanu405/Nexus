@@ -1,5 +1,6 @@
 
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:nexus_frontend/models/taskModel.dart';
 import 'package:nexus_frontend/repository/taskRepository.dart';
 
@@ -9,10 +10,10 @@ class TaskController extends StateNotifier<TaskScreenStatus> {
   TaskController(this.taskRepository)
     : super( TaskScreenStatus(selectedCategory: "all", taskList: [], currentCategoryTasks: [], allTaskCategories: [], loading: false, submitting: false));
 
-  Future<void> getAllTasks() async {
+  Future<void> getAllTasks(LatLng currLocation) async {
     state = state.copyWith(null, null, null, null, true, null);
     try{
-      final List<TaskModel>? tasks = await taskRepository.getAllTasks();
+      final List<TaskModel>? tasks = await taskRepository.getAllTasks(currLocation);
       if(tasks == null || tasks.isEmpty)
         {
           state = state.copyWith(null, null, null, null, false, null);
@@ -41,11 +42,11 @@ class TaskController extends StateNotifier<TaskScreenStatus> {
     }
   }
 
-  Future<void> addNewTask(TaskModel newTask) async
+  Future<void> addNewTask(TaskModel newTask, LatLng currLocation) async
   {
     state = state.copyWith(null, null, null, null, true, true);
     await taskRepository.addNewTask(newTask);
-    await getAllTasks();
+    await getAllTasks(currLocation);
     state = state.copyWith(null, null, null, null, false, false);
   }
 
@@ -62,7 +63,7 @@ class TaskController extends StateNotifier<TaskScreenStatus> {
    state = state.copyWith(null, null, tasks, null, null, null);
   }
 
-  Future<void> markTasksComplete(List<String> taskIds) async
+  Future<void> markTasksComplete(List<String> taskIds, LatLng currLocation) async
   {
     state = state.copyWith(null, null, null, null, true, null);
     final updated = await taskRepository.markTasksComplete(taskIds);
@@ -73,7 +74,21 @@ class TaskController extends StateNotifier<TaskScreenStatus> {
         return;
       }
 
-    await getAllTasks();
+    await getAllTasks(currLocation);
+  }
+
+  Future<void> deleteTask(String taskId, LatLng currLocation) async
+  {
+    state = state.copyWith(null, null, null, null, true, null);
+    final deleted = await taskRepository.deleteTask(taskId);
+
+    if(!deleted)
+      {
+        state = state.copyWith(null, null, null, null, false, null);
+        return;
+      }
+
+    await getAllTasks(currLocation);
   }
 
 

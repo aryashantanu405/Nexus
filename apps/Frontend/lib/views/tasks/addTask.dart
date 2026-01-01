@@ -443,7 +443,7 @@ SliverToBoxAdapter basicTaskFeatureForm(
 
                     await ref
                         .read(taskControllerProvider.notifier)
-                        .addNewTask(myNewTask);
+                        .addNewTask(myNewTask, ref.read(locationControllerProvider).currentPos);
 
                     ref.read(addTaskScreenSateProvider.notifier).reset();
 

@@ -12,7 +12,7 @@ import 'package:nexus_frontend/views/memory/memoryView.dart';
 import 'package:nexus_frontend/views/others/notificationView.dart';
 import 'package:nexus_frontend/views/profile/profileView.dart';
 
-import 'package:nexus_frontend/views/tasks/taskView.dart';
+import 'package:nexus_frontend/views/tasks/taskListView.dart';
 
 
 class MainScreen extends ConsumerStatefulWidget {
@@ -24,7 +24,7 @@ class MainScreen extends ConsumerStatefulWidget {
 
 class _MainScreenState extends ConsumerState<MainScreen> {
 
-  final List<Widget> _screens = [HomeView(), TaskView(), AnalyticsView(), ProfileView()];
+  final List<Widget> _screens = [HomeView(), TaskListView(), AnalyticsView(), ProfileView()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

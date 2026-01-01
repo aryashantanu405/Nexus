@@ -48,7 +48,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     debugPrint('BUILD: authStatus = ${authState.authStatus}');
 
     // Listen is only for side-effects; Riverpod 3.x allows this inside build()
-    ref.listen<UserState>(authControllerProvider, (previous, next) {
+    ref.listen<UserState>(authControllerProvider, (previous, next) async{
       debugPrint(
         'LISTEN: auth changed from ${previous?.authStatus} -> ${next.authStatus}',
       );
@@ -59,8 +59,9 @@ class _MyAppState extends ConsumerState<MyApp> {
         debugPrint(
           'LISTEN: detected login -> fetching tasks and starting tracking service',
         );
-        ref.read(taskControllerProvider.notifier).getAllTasks();
-        ref.read(locationControllerProvider.notifier).getCurrentLocation();
+        await ref.read(locationControllerProvider.notifier).getCurrentLocation();
+        ref.read(taskControllerProvider.notifier).getAllTasks(ref.read(locationControllerProvider).currentPos);
+
         String loginMessage = "Login Successful";
         String registerMessage = "Register Successful";
         rootScffoldMessengerKey.currentState?.showSnackBar(

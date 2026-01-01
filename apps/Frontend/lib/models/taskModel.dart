@@ -17,14 +17,19 @@ class TaskModel {
   List<String>? tags;
   List<SubtaskModel>? subtasks;
   double? urgencyScore;
+  double? distanceBetween;
+  String? distanceUnit;
+
 
   TaskModel({
     required this.title,
     this.description,
     this.id,
     this.category,
+    this.distanceBetween,
     this.priority,
     this.urgencyScore,
+    this.distanceUnit,
     this.status,
     this.aiScore,
     this.taskLocation,
