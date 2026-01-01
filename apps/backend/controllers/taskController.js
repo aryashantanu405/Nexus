@@ -4,39 +4,49 @@ import UserModel from "../models/userModel.js";
 import mongoose from "mongoose";
 import { limitUserEntries } from "../utils/limitUserEntries.js";
 
+console.log("🔥 RUNNING TASKCONTROLLER FROM:", import.meta.url);
+
 /**
  * CREATE TASK
  */
 export const createTask = async (req, res) => {
-  const {
-    title,
-    description,
-    priority,
-    dueDate,
-    estimatedDuration,
-    category,
-    tags,
-    linkedLocation,
-    subtasks,
-  } = req.body;
-
-  const parsedDate = dueDate ? new Date(dueDate) : null;
-
-  console.log(parsedDate);
-  
-
-  const userId = req.user.id;
-
-  if (!title) {
-    return res.status(400).json({
-      success: false,
-      error: { code: "VALIDATION_ERROR", message: "Title is required." },
-    });
-  }
-
   try {
+    // MUST be let (values are normalized)
+    let {
+      title,
+      description,
+      priority,
+      dueDate,
+      estimatedDuration,
+      category,
+      tags,
+      linkedLocation,
+      subtasks,
+    } = req.body;
+
+    const userId = req.user.id;
+
+    if (!title) {
+      return res.status(400).json({
+        success: false,
+        error: { message: "Title is required." },
+      });
+    }
+
+    // normalize inputs
+    const normalizedPriority = priority ? priority.toLowerCase() : "medium";
+
+    const parsedDate = dueDate ? new Date(dueDate) : null;
+    if (parsedDate && isNaN(parsedDate.getTime())) {
+      return res.status(400).json({
+        success: false,
+        error: { message: "Invalid dueDate format." },
+      });
+    }
+
     let placeId = null;
 
+    // linked location (optional)
     if (linkedLocation?.lat && linkedLocation?.lng) {
       const place = await PlaceModel.create({
         user: userId,
@@ -64,12 +74,12 @@ export const createTask = async (req, res) => {
       user: userId,
       title,
       description,
-      priority,
+      priority: normalizedPriority,
       dueDate: parsedDate,
       estimatedDuration,
       category,
       tags,
-      subtasks: subtasks || [],
+      subtasks: Array.isArray(subtasks) ? subtasks : [],
       location: placeId,
       status: "Pending",
     });
@@ -92,19 +102,16 @@ export const createTask = async (req, res) => {
       },
     });
   } catch (err) {
+    console.error("CREATE TASK ERROR:", err);
     return res.status(500).json({
       success: false,
-      error: {
-        code: "INTERNAL_ERROR",
-        message: "Server error while creating task.",
-        details: err.message,
-      },
+      error: { message: err.message },
     });
   }
 };
 
 /**
- * GET ALL TASKS
+ * GET ALL USER TASKS
  */
 export const getAllUserTasks = async (req, res) => {
   try {
@@ -113,13 +120,11 @@ export const getAllUserTasks = async (req, res) => {
     if (req.query.status && req.query.status !== "all") {
       query.status =
         req.query.status.charAt(0).toUpperCase() +
-        req.query.status.slice(1);
+        req.query.status.slice(1).toLowerCase();
     }
 
     if (req.query.priority && req.query.priority !== "all") {
-      query.priority =
-        req.query.priority.charAt(0).toUpperCase() +
-        req.query.priority.slice(1);
+      query.priority = req.query.priority.toLowerCase();
     }
 
     const limit = Number(req.query.limit) || 50;
@@ -142,7 +147,7 @@ export const getAllUserTasks = async (req, res) => {
 
           description: t.description,
           status: t.status.toLowerCase(),
-          priority: t.priority.toLowerCase(),
+          priority: t.priority,
           dueDate: t.dueDate,
           estimatedDuration: t.estimatedDuration,
           category: t.category,
@@ -162,11 +167,7 @@ export const getAllUserTasks = async (req, res) => {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      error: {
-        code: "INTERNAL_ERROR",
-        message: "Server error fetching tasks.",
-        details: err.message,
-      },
+      error: { message: err.message },
     });
   }
 };
@@ -178,7 +179,7 @@ export const getTaskById = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({
       success: false,
-      error: { code: "VALIDATION_ERROR", message: "Invalid Task ID." },
+      error: { message: "Invalid Task ID." },
     });
   }
 
@@ -187,13 +188,13 @@ export const getTaskById = async (req, res) => {
   if (!task)
     return res.status(404).json({
       success: false,
-      error: { code: "NOT_FOUND", message: "Task not found." },
+      error: { message: "Task not found." },
     });
 
   if (task.user.toString() !== req.user.id)
     return res.status(403).json({
       success: false,
-      error: { code: "FORBIDDEN", message: "Not authorized." },
+      error: { message: "Not authorized." },
     });
 
   return res.status(200).json({
@@ -203,13 +204,13 @@ export const getTaskById = async (req, res) => {
 };
 
 /**
- * UPDATE TASK ✅ (THIS FIXES YOUR CURRENT ERROR)
+ * UPDATE TASK
  */
 export const updateTask = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({
       success: false,
-      error: { code: "VALIDATION_ERROR", message: "Invalid Task ID." },
+      error: { message: "Invalid Task ID." },
     });
   }
 
@@ -218,14 +219,18 @@ export const updateTask = async (req, res) => {
   if (!task)
     return res.status(404).json({
       success: false,
-      error: { code: "NOT_FOUND", message: "Task not found." },
+      error: { message: "Task not found." },
     });
 
   if (task.user.toString() !== req.user.id)
     return res.status(403).json({
       success: false,
-      error: { code: "FORBIDDEN", message: "Not authorized." },
+      error: { message: "Not authorized." },
     });
+
+  if (req.body.priority) {
+    req.body.priority = req.body.priority.toLowerCase();
+  }
 
   Object.assign(task, req.body);
   await task.save();
@@ -247,7 +252,7 @@ export const markTaskComplete = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({
       success: false,
-      error: { code: "VALIDATION_ERROR", message: "Invalid Task ID." },
+      error: { message: "Invalid Task ID." },
     });
   }
 
@@ -256,13 +261,13 @@ export const markTaskComplete = async (req, res) => {
   if (!task)
     return res.status(404).json({
       success: false,
-      error: { code: "NOT_FOUND", message: "Task not found." },
+      error: { message: "Task not found." },
     });
 
   if (task.user.toString() !== req.user.id)
     return res.status(403).json({
       success: false,
-      error: { code: "FORBIDDEN", message: "Not authorized." },
+      error: { message: "Not authorized." },
     });
 
   task.status = "Completed";
@@ -273,7 +278,7 @@ export const markTaskComplete = async (req, res) => {
     data: {
       id: task._id,
       status: "completed",
-      completedAt: new Date(),
+      completedAt: task.updatedAt,
     },
   });
 };
@@ -285,7 +290,7 @@ export const deleteTask = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({
       success: false,
-      error: { code: "VALIDATION_ERROR", message: "Invalid Task ID." },
+      error: { message: "Invalid Task ID." },
     });
   }
 
@@ -294,13 +299,13 @@ export const deleteTask = async (req, res) => {
   if (!task)
     return res.status(404).json({
       success: false,
-      error: { code: "NOT_FOUND", message: "Task not found." },
+      error: { message: "Task not found." },
     });
 
   if (task.user.toString() !== req.user.id)
     return res.status(403).json({
       success: false,
-      error: { code: "FORBIDDEN", message: "Not authorized." },
+      error: { message: "Not authorized." },
     });
 
   await UserModel.findByIdAndUpdate(task.user, {
