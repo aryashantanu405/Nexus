@@ -67,24 +67,42 @@ Card TaskCard(TaskModel myTask, BuildContext context, WidgetRef ref) {
                             "assets/images/loginIcon.png",
                             "Due on: ${DateFormat.yMMMMd().format(DateTime(myTask.dueDate?.year ?? 0, myTask.dueDate?.month ?? 0, myTask.dueDate?.day ?? 0))}",
                           ),
-                      taskSpecBadge("assets/images/loginIcon.png", "Due in 6 days"),
-                      taskSpecBadge("assets/images/loginIcon.png", "Due in 6 days"),
+                      myTask.taskLocation == null
+                          ? SizedBox(height: 0, width: 0)
+                          : taskSpecBadge(
+                            "assets/images/loginIcon.png",
+                            "${myTask.distanceBetween} ${myTask.distanceUnit}",
+                          ),
+                      taskSpecBadge(
+                        "assets/images/loginIcon.png",
+                        "Due in 6 days",
+                      ),
                     ],
                   ),
                 ),
-                Consumer(builder: (context, ref, child) {
-                  final selectedIds = ref.watch(addTaskScreenSateProvider.select((screenStatus) => screenStatus.selectedTaskIds));
-                  return Checkbox(value: selectedIds.contains(myTask.id), onChanged: (value) {
-                    if(value!)
-                      {
-                        ref.read(addTaskScreenSateProvider.notifier).selectATask(myTask.id!);
-                      }
-                    else{
-                      ref.read(addTaskScreenSateProvider.notifier).disselectATask(myTask.id!);
-                    }
-
-                  });
-                },)
+                Consumer(
+                  builder: (context, ref, child) {
+                    final selectedIds = ref.watch(
+                      addTaskScreenSateProvider.select(
+                        (screenStatus) => screenStatus.selectedTaskIds,
+                      ),
+                    );
+                    return Checkbox(
+                      value: selectedIds.contains(myTask.id),
+                      onChanged: (value) {
+                        if (value!) {
+                          ref
+                              .read(addTaskScreenSateProvider.notifier)
+                              .selectATask(myTask.id!);
+                        } else {
+                          ref
+                              .read(addTaskScreenSateProvider.notifier)
+                              .disselectATask(myTask.id!);
+                        }
+                      },
+                    );
+                  },
+                ),
               ],
             ),
           ],

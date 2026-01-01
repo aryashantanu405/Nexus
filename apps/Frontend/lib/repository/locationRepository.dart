@@ -18,7 +18,7 @@ class LocationRepository {
       return null;
     }
 
-    final pos = await Geolocator.getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.best));
+    final pos = await Geolocator.getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
 
     // 🚨 CRITICAL WEB FIX
     if (!pos.latitude.isFinite || !pos.longitude.isFinite) {

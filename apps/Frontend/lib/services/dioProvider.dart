@@ -7,7 +7,7 @@ final dioProvider = Provider<Dio>((ref) {
 
   final dio = Dio(
     BaseOptions(
-      baseUrl: "http://localhost:3000/api",
+      baseUrl: "http://https://backend-production-3488.up.railway.app/api",
       connectTimeout: const Duration(seconds: 20),
       receiveTimeout: const Duration(seconds: 20),
       headers: {

@@ -13,15 +13,16 @@ class ContextMapScreenController extends StateNotifier<ScreenStatus>{
   ContextMapScreenController():super(ScreenStatus(selectedTasks: [], taskLoading: false));
   void viewTasksBasedOnLocation(LatLng currPos, List<TaskModel> allTasks)
   {
-    List<LocationProximityTask> proximityTasks = [];
+    List<TaskModel> proximityTasks = [];
     for(TaskModel task in allTasks)
       {
         if(task.taskLocation != null && task.taskLocation?.position != null)
           {
             double dist = Geolocator.distanceBetween(currPos.latitude, currPos.longitude, task.taskLocation?.lat ?? 0, task.taskLocation?.lng ?? 0);
-            if(dist <= 10)
+            if(dist <= 1500)
               {
-                proximityTasks.add(LocationProximityTask(currTask: task, distance: dist));
+                task.distanceBetween = dist;
+                proximityTasks.add(task);
               }
           }
       }
@@ -30,20 +31,15 @@ class ContextMapScreenController extends StateNotifier<ScreenStatus>{
   }
 }
 
-class LocationProximityTask{
-  final TaskModel currTask;
-  final double distance;
 
-  LocationProximityTask({required this.currTask, required this.distance});
-}
 
 class ScreenStatus{
-  final List<LocationProximityTask> selectedTasks;
+  final List<TaskModel> selectedTasks;
   final bool taskLoading;
 
   ScreenStatus({required this.selectedTasks, required this.taskLoading});
 
-  ScreenStatus copyWith(List<LocationProximityTask>? selectedTasks, bool? taskLoading)
+  ScreenStatus copyWith(List<TaskModel>? selectedTasks, bool? taskLoading)
   {
     return ScreenStatus(selectedTasks: selectedTasks ?? this.selectedTasks, taskLoading: taskLoading ?? this.taskLoading);
   }

@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nexus_frontend/controllers/location/locationController.dart';
 import 'package:nexus_frontend/controllers/map/contextMapController.dart';
 import 'package:nexus_frontend/controllers/task/taskController.dart';
+import 'package:nexus_frontend/models/taskModel.dart';
 import 'package:nexus_frontend/widgets/gradientButton.dart';
 import 'package:nexus_frontend/widgets/sliverAppBar.dart';
 
@@ -96,7 +97,7 @@ class ContextMapView extends ConsumerWidget {
     );
   }
 
-  Widget _nearbyTasks(List<LocationProximityTask> allTasks) {
+  Widget _nearbyTasks(List<TaskModel> allTasks) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -114,10 +115,17 @@ class ContextMapView extends ConsumerWidget {
               physics: NeverScrollableScrollPhysics(),
               itemCount: allTasks.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(allTasks[index].currTask.title),
-                  subtitle: Text(allTasks[index].currTask.category ?? ""),
-                  trailing: Text(allTasks[index].distance.toString()),
+                return Column(
+                  children: [
+                    ListTile(
+                      title: Text(allTasks[index].title),
+                      subtitle: Text(allTasks[index].category ?? ""),
+                      trailing: Text(allTasks[index].distanceBetween!.toStringAsFixed(2)),
+                    ),
+                    SizedBox(
+                      height: 5.r,
+                    ),
+                  ],
                 );
               },
             ),
