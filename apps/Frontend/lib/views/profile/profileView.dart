@@ -28,7 +28,7 @@ class ProfileView extends ConsumerWidget {
           myAppBar(
             "Profile",
             "Manage your account",
-            "assets/images/loginIcon.png",
+            "assets/images/profile.png",
           ),
           SliverToBoxAdapter(
             child: Padding(

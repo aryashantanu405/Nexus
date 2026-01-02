@@ -3,12 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:nexus_frontend/controllers/auth/authController.dart';
-import 'package:nexus_frontend/services/navigationBarProvider.dart';
 import 'package:nexus_frontend/widgets/myForm.dart';
 import 'package:nexus_frontend/widgets/sliverAppBar.dart';
 import 'package:nexus_frontend/views/others/termsAndConditionsView.dart';
-
-import '../mainScreen.dart';
 
 class LoginView extends ConsumerStatefulWidget {
   const LoginView({super.key});
@@ -37,7 +34,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
             "assets/images/loginIcon.png",
           ),
 
-          SliverToBoxAdapter(child: SizedBox(height: 120.h)),
+          SliverToBoxAdapter(child: SizedBox(height: 100.h)),
 
           /// LOGIN FORM
           customForm(
@@ -50,54 +47,20 @@ class _LoginViewState extends ConsumerState<LoginView> {
             () async {
               await ref
                   .read(authControllerProvider.notifier)
-                  .login(emailController.text.trim(), passwordController.text.trim());
-
-
-
-
-              // ref
-              //     .read(navigationControllerProvider.notifier)
-              //     .changeScreen(1); // Home
+                  .login(
+                    emailController.text.trim(),
+                    passwordController.text.trim(),
+                  );
             },
             [emailController, passwordController],
-            authState.authStatus, ref
-          ),
-
-          /// CONTINUE TO HOME
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-              child: SizedBox(
-                width: double.infinity,
-                height: 48.h,
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Color(0xff667eea)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                  ),
-                  onPressed: () {
-                    ref
-                        .read(navigationControllerProvider.notifier)
-                        .changeScreen(1);
-                  },
-                  child: const Text(
-                    "Continue as Guest",
-                    style: TextStyle(
-                      color: Color(0xff667eea),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            authState.authStatus,
+            ref,
           ),
 
           /// TERMS & CONDITIONS
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.only(bottom: 24.h),
+              padding: EdgeInsets.only(bottom: 24.h, top: 16.h),
               child: Center(
                 child: GestureDetector(
                   onTap: () {

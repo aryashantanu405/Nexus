@@ -98,7 +98,7 @@ class FocusView extends ConsumerWidget {
           myAppBar(
             "Focus Mode",
             "Deep Work & Productivity",
-            "assets/images/loginIcon.png",
+            "assets/images/target.png",
           ),
           SliverToBoxAdapter(
             child: Padding(

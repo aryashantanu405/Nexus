@@ -17,7 +17,7 @@ class _TaskViewState extends ConsumerState<TaskView> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          myAppBar("Task View", "", "assets/images/loginIcon.png"),
+          myAppBar("Task View", "", "assets/images/tasks.png"),
 
 
         ],

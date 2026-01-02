@@ -34,7 +34,7 @@ class _AddTaskViewState extends ConsumerState<AddTaskView> {
           myAppBar(
             "Add Task",
             "Update Your Task List",
-            "assets/images/loginIcon.png",
+            "assets/images/tasks.png",
           ),
           basicTaskFeatureForm(
             ref,

@@ -31,7 +31,7 @@ class _TaskViewState extends ConsumerState<TaskListView> {
           myAppBar(
             "Tasks",
             "All Tasks & Categories",
-            "assets/images/loginIcon.png",
+            "assets/images/tasks.png",
           ),
 
           SliverToBoxAdapter(
