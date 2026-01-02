@@ -19,12 +19,18 @@ class TaskRepository {
       if (response.statusCode == 200) {
         print("Success");
       }
+      else{
+        print(response.data);
+        return [];
+      }
 
       final allTasks = data["data"]["tasks"];
 
       List<TaskModel>? myTasks = List<TaskModel>.from(
         allTasks.map((task) => TaskModel.fromJson(task)),
       );
+
+
 
       for (int i = 0; i < myTasks.length; i++) {
         TaskModel currTask = myTasks[i];
@@ -89,7 +95,7 @@ class TaskRepository {
 
   Future<bool> markTasksComplete(List<String> taskIds) async {
     try {
-      final response = await dio.post("/tasks/completetask", data: taskIds);
+      final response = await dio.post("/tasks/complete", data: {"taskIds" : taskIds});
 
       if (response.statusCode == 200) {
         print("Success");

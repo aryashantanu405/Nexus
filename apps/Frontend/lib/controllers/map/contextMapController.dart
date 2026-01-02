@@ -19,7 +19,7 @@ class ContextMapScreenController extends StateNotifier<ScreenStatus>{
         if(task.taskLocation != null && task.taskLocation?.position != null)
           {
             double dist = Geolocator.distanceBetween(currPos.latitude, currPos.longitude, task.taskLocation?.lat ?? 0, task.taskLocation?.lng ?? 0);
-            if(dist <= 1500)
+            if(dist <= 1500 && task.status!.toLowerCase() != "completed")
               {
                 task.distanceBetween = dist;
                 proximityTasks.add(task);
