@@ -429,11 +429,10 @@ SliverToBoxAdapter basicTaskFeatureForm(
 
 
 
-
                     final myNewTask = TaskModel(
                       title: taskTitleController.text,
                       description: taskDescriptionController.text,
-                      category: taskCategoryController.text,
+                      category: taskCategoryController.text.isEmpty ? "all": taskCategoryController.text,
                       priority: taskPriority,
                       subtasks: taskSubtasks,
                       dueDate: dueDate,

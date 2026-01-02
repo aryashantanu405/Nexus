@@ -38,20 +38,26 @@ class _TaskViewState extends ConsumerState<TaskListView> {
             child: Consumer(
               builder: (context, ref, child) {
                 final taskListProvider = ref.watch(taskControllerProvider);
-                return taskListProvider.loading ?  const CircularProgressIndicator() :
+                return taskListProvider.loading ?  Center(
+                  child: SizedBox(
+                    height: 75.r,
+                      width: 75.r,
+                      child: const CircularProgressIndicator()),
+                ) :
                  Column(
                   children: [
                     myNavigationBar(
-                      taskListProvider.allTaskCategories,
+                      [...taskListProvider.allTaskCategories, "On-Going", "Completed"],
                       ref,
                       taskListProvider,
                     ),
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: taskListProvider.currentCategoryTasks.length,
+                      itemCount: ref.read(taskControllerProvider).currentCategoryTasks.length,
                       itemBuilder: (context, index) {
-                        return GestureDetector(
+                        List<TaskModel> myTasks = ref.read(taskControllerProvider).currentCategoryTasks;
+                        return  GestureDetector(
                           onHorizontalDragEnd: (details) {
                             if(details.primaryVelocity! == null)
                               {
@@ -69,7 +75,7 @@ class _TaskViewState extends ConsumerState<TaskListView> {
                               }
                           },
                           child: TaskCard(
-                            taskListProvider.currentCategoryTasks[index],
+                            myTasks[index],
                             context,
                             ref
                           ),
@@ -84,11 +90,13 @@ class _TaskViewState extends ConsumerState<TaskListView> {
         ],
       ),
       floatingActionButton: Consumer(builder: (context, ref, child) {
-        final showUpdate = ref.watch(addTaskScreenSateProvider.select((screenStaus) => screenStaus.showUpdateButton));
+        final showUpdate = ref.watch(taskControllerProvider.select((screenStaus) => screenStaus.showUpdateButton));
         return showUpdate ? SizedBox(
           height: 50.r,
             width: 150.r,
-            child: GradientButton(onPressed: (){}, child: Text("Update Tasks", style: TextStyle(color: Colors.white),))) : FloatingActionButton(
+            child: GradientButton(onPressed: (){
+              ref.read(taskControllerProvider.notifier).markTasksComplete(ref.read(taskControllerProvider).selectedTaskIds.toList(), ref.read(locationControllerProvider).currentPos);
+            }, child: Text("Update Tasks", style: TextStyle(color: Colors.white),))) : FloatingActionButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (_) {

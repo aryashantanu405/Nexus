@@ -112,6 +112,9 @@ export const getAllUserTasks = async (req, res) => {
   try {
     const query = { user: req.user.id };
 
+  
+    
+
     if (req.query.status && req.query.status !== "all") {
       query.status =
         req.query.status.charAt(0).toUpperCase() +
@@ -290,6 +293,8 @@ export const markTaskComplete = async (req, res) => {
 export const markTasksCompletedBulk = async (req, res) => {
   try {
     const { taskIds } = req.body;
+    
+    
     const userId = req.user.id;
 
     if (!Array.isArray(taskIds) || taskIds.length === 0) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:nexus_frontend/controllers/task/taskController.dart';
 import 'package:nexus_frontend/models/taskModel.dart';
 import 'package:nexus_frontend/services/providers/radioButtonProvider.dart';
 import 'package:nexus_frontend/utils/colorPallete.dart';
@@ -80,10 +81,10 @@ Card TaskCard(TaskModel myTask, BuildContext context, WidgetRef ref) {
                     ],
                   ),
                 ),
-                Consumer(
+                myTask.status!.toLowerCase() == "completed" ? SizedBox(height: 0, width: 0,) : Consumer(
                   builder: (context, ref, child) {
                     final selectedIds = ref.watch(
-                      addTaskScreenSateProvider.select(
+                      taskControllerProvider.select(
                         (screenStatus) => screenStatus.selectedTaskIds,
                       ),
                     );
@@ -92,11 +93,11 @@ Card TaskCard(TaskModel myTask, BuildContext context, WidgetRef ref) {
                       onChanged: (value) {
                         if (value!) {
                           ref
-                              .read(addTaskScreenSateProvider.notifier)
+                              .read(taskControllerProvider.notifier)
                               .selectATask(myTask.id!);
                         } else {
                           ref
-                              .read(addTaskScreenSateProvider.notifier)
+                              .read(taskControllerProvider.notifier)
                               .disselectATask(myTask.id!);
                         }
                       },

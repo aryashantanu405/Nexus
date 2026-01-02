@@ -8,15 +8,15 @@ class TaskController extends StateNotifier<TaskScreenStatus> {
   TaskRepository taskRepository;
 
   TaskController(this.taskRepository)
-    : super( TaskScreenStatus(selectedCategory: "all", taskList: [], currentCategoryTasks: [], allTaskCategories: [], loading: false, submitting: false));
+    : super( TaskScreenStatus(selectedCategory: "all", taskList: [], currentCategoryTasks: [], allTaskCategories: [], loading: false, submitting: false,  selectedTaskIds: {}, showUpdateButton: false));
 
   Future<void> getAllTasks(LatLng currLocation) async {
-    state = state.copyWith(null, null, null, null, true, null);
+    state = state.copyWith(null, null, null, null, true, null,  null, null);
     try{
       final List<TaskModel>? tasks = await taskRepository.getAllTasks(currLocation);
       if(tasks == null || tasks.isEmpty)
         {
-          state = state.copyWith(null, null, null, null, false, null);
+          state = state.copyWith(null, null, null, null, false, null, null, null);
           return;
         }
 
@@ -33,7 +33,7 @@ class TaskController extends StateNotifier<TaskScreenStatus> {
         }
 
       final allCategories = ["All", ...distinct];
-      state = state.copyWith("all", safeTasks, safeTasks, allCategories, false, null);
+      state = state.copyWith("all", safeTasks, safeTasks, allCategories, false, null, null, null);
     }
         catch(err)
     {
@@ -44,33 +44,60 @@ class TaskController extends StateNotifier<TaskScreenStatus> {
 
   Future<void> addNewTask(TaskModel newTask, LatLng currLocation) async
   {
-    state = state.copyWith(null, null, null, null, true, true);
+    state = state.copyWith(null, null, null, null, true, true, null, null);
     await taskRepository.addNewTask(newTask);
     await getAllTasks(currLocation);
-    state = state.copyWith(null, null, null, null, false, false);
+    state = state.copyWith(null, null, null, null, false, false, null, null);
   }
 
   void categoryTasks(String category) {
-    state = state.copyWith(category.toLowerCase(), null, null, null, null, null);
+    if(category.toLowerCase() == "completed" || category.toLowerCase() == "on-going")
+    {
+      statusWiseCategory(category);
+      return;
+    }
+    state = state.copyWith(category.toLowerCase(), null, null, null, null, null, null, null);
+
+    if(category.toLowerCase() == "all")
+      {
+        List<TaskModel> myTasks = state.taskList;
+        state = state.copyWith(null, null, myTasks, null, null, null, null, null);
+        return;
+      }
     List<TaskModel> tasks = [];
 
     for (TaskModel task in state.taskList) {
-      if (task.category?.toLowerCase() == category.toLowerCase() || category.toLowerCase() == "all") {
+      if (((task.category?.toLowerCase() == category.toLowerCase()) && (task.status?.toLowerCase() != "completed")) || category.toLowerCase() == "all") {
         tasks.add(task);
       }
     }
 
-   state = state.copyWith(null, null, tasks, null, null, null);
+   state = state.copyWith(null, null, tasks, null, null, null, null, null);
+  }
+
+
+  void statusWiseCategory(String status)
+  {
+    state = state.copyWith(status.toLowerCase(), null, null, null, null, null, null, null);
+    List<TaskModel> tasks = [];
+
+    for (TaskModel task in state.taskList) {
+      if (task.status?.toLowerCase() == status.toLowerCase() || status.toLowerCase() == "all") {
+        tasks.add(task);
+      }
+    }
+
+    state = state.copyWith(null, null, tasks, null, null, null, null, null);
   }
 
   Future<void> markTasksComplete(List<String> taskIds, LatLng currLocation) async
   {
-    state = state.copyWith(null, null, null, null, true, null);
+    state = state.copyWith(null, null, null, null, true, null, null, null);
     final updated = await taskRepository.markTasksComplete(taskIds);
 
     if(!updated)
       {
-        state = state.copyWith(null, null, null, null, false, null);
+        state = state.copyWith(null, null, null, null, false, null, null, null);
         return;
       }
 
@@ -79,17 +106,39 @@ class TaskController extends StateNotifier<TaskScreenStatus> {
 
   Future<void> deleteTask(String taskId, LatLng currLocation) async
   {
-    state = state.copyWith(null, null, null, null, true, null);
+    state = state.copyWith(null, null, null, null, true, null, null, null);
     final deleted = await taskRepository.deleteTask(taskId);
 
     if(!deleted)
       {
-        state = state.copyWith(null, null, null, null, false, null);
+        state = state.copyWith(null, null, null, null, false, null, null, null);
         return;
       }
 
     await getAllTasks(currLocation);
   }
+
+  void selectATask(String taskId)
+  {
+    final selectedIds = Set<String>.from(state.selectedTaskIds);
+    selectedIds.add(taskId);
+
+    state = state.copyWith(null, null, null, null, null, null,  selectedIds, true);
+  }
+
+  void disselectATask(String taskId)
+  {
+    final selectedIds = Set<String>.from(state.selectedTaskIds);
+    selectedIds.remove(taskId);
+
+    if(selectedIds.isEmpty)
+    {
+      state = state.copyWith(null, null, null, null, null, null,  selectedIds, false);
+      return;
+    }
+    state = state.copyWith(null, null, null, null, null, null,  selectedIds, true);
+  }
+
 
 
 }
@@ -101,6 +150,8 @@ class TaskScreenStatus {
   final List<String> allTaskCategories;
   final bool loading;
   final bool submitting;
+  final Set<String> selectedTaskIds;
+  final bool showUpdateButton;
 
 
 
@@ -110,7 +161,9 @@ class TaskScreenStatus {
     required this.currentCategoryTasks,
     required this.allTaskCategories,
     required this.loading,
-    required this.submitting
+    required this.submitting,
+    required this.selectedTaskIds,
+    required this.showUpdateButton
   });
 
   TaskScreenStatus copyWith(
@@ -119,7 +172,9 @@ class TaskScreenStatus {
       List<TaskModel>? currentCategoryTasks,
       List<String>? allTaskCategories,
       bool? loading,
-      bool? submitting
+      bool? submitting,
+      Set<String>? selectedTaskIds,
+      bool? showUpdateButton
   ) {
     return TaskScreenStatus(
       selectedCategory: selectedCategory ?? this.selectedCategory,
@@ -127,7 +182,9 @@ class TaskScreenStatus {
       currentCategoryTasks: currentCategoryTasks ?? this.currentCategoryTasks,
       allTaskCategories: allTaskCategories ?? this.allTaskCategories,
       loading: loading ?? this.loading,
-      submitting: submitting ?? this.submitting
+      submitting: submitting ?? this.submitting,
+        selectedTaskIds: selectedTaskIds ?? this.selectedTaskIds,
+        showUpdateButton: showUpdateButton ?? this.showUpdateButton
     );
   }
 }

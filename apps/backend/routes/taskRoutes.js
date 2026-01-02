@@ -16,13 +16,13 @@ const router = express.Router();
  * CREATE TASK
  * POST /api/tasks
  */
-router.post("/", protect, createTask);
+router.post("/createtask", protect, createTask);
 
 /**
  * GET ALL TASKS
  * GET /api/tasks
  */
-router.get("/", protect, getAllUserTasks);
+router.get("/getalltasks", protect, getAllUserTasks);
 
 /**
  * MARK MULTIPLE TASKS AS COMPLETED (BULK) ✅
