@@ -34,7 +34,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
           myAppBar(
             "Home Screen",
             "Daily Agenda & AI Insight",
-            "assets/images/loginIcon.png",
+            "assets/images/mansion.png",
           ),
           SliverToBoxAdapter(
             child: Padding(
@@ -97,7 +97,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
   children: [
     HomeScreenOutlinedButton(
-      "assets/images/loginIcon.png",
+      "assets/images/tasks.png",
       "Add Task",
       () {
         Navigator.push(
@@ -110,7 +110,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
     ),
     SizedBox(width: 5.r),
     HomeScreenOutlinedButton(
-      "assets/images/loginIcon.png",
+      "assets/images/target.png",
       "Start Focus",
       () {
         Navigator.push(
@@ -128,7 +128,7 @@ Row(
   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
   children: [
     HomeScreenOutlinedButton(
-      "assets/images/loginIcon.png",
+      "assets/images/map.png",
       "View Map",
       () {
         ref.read(contextMapScreenControllerProvider.notifier).viewTasksBasedOnLocation(ref.read(locationControllerProvider).currentPos, ref.read(taskControllerProvider).taskList);
@@ -142,7 +142,7 @@ Row(
     ),
     SizedBox(width: 5.r),
     HomeScreenOutlinedButton(
-      "assets/images/loginIcon.png",
+      "assets/images/analysis.png",
       "Analytics",
       () {
         Navigator.push(

@@ -22,7 +22,7 @@ class ContextMapView extends ConsumerWidget {
           myAppBar(
             "Context Map",
             "Location-based Reminders",
-            "assets/images/loginIcon.png",
+            "assets/images/map.png",
           ),
 
           SliverToBoxAdapter(

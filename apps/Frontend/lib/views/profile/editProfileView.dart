@@ -53,7 +53,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
           myAppBar(
             "Edit Profile",
             "Update your details",
-            "assets/images/loginIcon.png",
+            "assets/images/profile.png",
           ),
           SliverToBoxAdapter(
             child: Padding(

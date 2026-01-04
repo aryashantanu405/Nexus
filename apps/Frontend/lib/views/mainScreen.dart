@@ -24,7 +24,7 @@ class MainScreen extends ConsumerStatefulWidget {
 
 class _MainScreenState extends ConsumerState<MainScreen> {
 
-  final List<Widget> _screens = [HomeView(), TaskListView(), AnalyticsView(), ProfileView()];
+  final List<Widget> _screens = [HomeView(), TaskListView(), ContextMapView(), ProfileView()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,22 +63,22 @@ class _MainScreenState extends ConsumerState<MainScreen> {
           NavigationDestination(icon: SizedBox(
             height: 25.r,
             width: 25.r,
-            child: Image.asset("assets/images/loginIcon.png"),
+            child: Image.asset("assets/images/home-page.png"),
           ), label: "Home"),
           NavigationDestination(icon: SizedBox(
             height: 25.r,
             width: 25.r,
-            child: Image.asset("assets/images/loginIcon.png"),
+            child: Image.asset("assets/images/planning.png"),
           ), label: "Tasks"),
           NavigationDestination(icon: SizedBox(
             height: 25.r,
             width: 25.r,
-            child: Image.asset("assets/images/loginIcon.png"),
+            child: Image.asset("assets/images/destination.png"),
           ), label: "Location"),
           NavigationDestination(icon: SizedBox(
             height: 25.r,
             width: 25.r,
-            child: Image.asset("assets/images/loginIcon.png"),
+            child: Image.asset("assets/images/user.png"),
           ), label: "Profile"),
 
         ]),

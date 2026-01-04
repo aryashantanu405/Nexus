@@ -15,7 +15,7 @@ class AnalyticsView extends StatelessWidget {
           myAppBar(
             "Analytics",
             "Track your productivity",
-            "assets/images/loginIcon.png",
+            "assets/images/analysis.png",
           ),
 
           SliverToBoxAdapter(
